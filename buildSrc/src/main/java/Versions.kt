@@ -9,7 +9,7 @@ object Versions {
     const val targetSdk = 29
     const val minSdk = 16
 
-    const val core = "0.0.1"
+    const val core = "0.0.2"
 
     const val coroutines = "1.3.5"
 
