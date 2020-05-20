@@ -15,7 +15,7 @@ object Versions {
 
     const val moshi = "1.9.2"
 
-    const val webrtc = "83.11.0"
+    const val webrtc = "83.12.0"
     const val webrtcKtx = "0.0.1"
     const val sdp = "0.6.0"
 
