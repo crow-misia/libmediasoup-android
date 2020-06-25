@@ -3,8 +3,13 @@
 package io.github.zncmn.mediasoup
 
 import io.github.zncmn.mediasoup.model.*
+import io.github.zncmn.mediasoup.model.IceCandidate
+import io.github.zncmn.mediasoup.model.RtpParameters
 import io.github.zncmn.mediasoup.sdp.toNormalizeInt
 import io.github.zncmn.mediasoup.sdp.toNormalizeString
+import org.webrtc.*
+import org.webrtc.generateProfileLevelIdForAnswer
+import org.webrtc.isSameH264Profile
 import java.util.*
 import java.util.regex.Pattern
 
@@ -738,32 +743,31 @@ private fun RtpCodecCapability.matchCodec(target: RtpCodecCapability, strict: Bo
 
             // If strict matching check profile-level-id.
             if (strict) {
-                val aParameters = hashMapOf<String, String>()
-                val bParameters = hashMapOf<String, String>()
+                val aParameters = generateH264Profile(
+                    levelAsymmetryAllowed = getH264LevelAssimetryAllowed().toString(),
+                    packetizationMode = aPacketizationMode.toString(),
+                    profileLevelId = getH264ProfileLevelId()
+                )
+                val bParameters = generateH264Profile(
+                    levelAsymmetryAllowed = target.getH264LevelAssimetryAllowed().toString(),
+                    packetizationMode = bPacketizationMode.toString(),
+                    profileLevelId = target.getH264ProfileLevelId()
+                )
 
-                aParameters["level-asymmetry-allowed"] = getH264LevelAssimetryAllowed().toString()
-                aParameters["packetization-mode"] = aPacketizationMode.toString()
-                aParameters["profile-level-id"] = getH264ProfileLevelId()
-                bParameters["level-asymmetry-allowed"] = target.getH264LevelAssimetryAllowed().toString()
-                bParameters["packetization-mode"] = bPacketizationMode.toString()
-                bParameters["profile-level-id"] = target.getH264ProfileLevelId()
+                if (!isSameH264Profile(aParameters, bParameters)) {
+                    return false
+                }
 
-                // TODO H264 internal function calling
-//                if (!H264Utils.isSameH264Profile(aParameters, bParameters)) {
-//                    return false
-//                }
-
-                val newParameters = hashMapOf<String, String>()
-                // TODO H264 internal function calling
-//                if (!H264Utils.generateProfileLevelIdForAnswer(aParameters, bParameters, newParameters)) {
-//                    return false
-//                }
+                val answerParameters = hashMapOf<String, String>()
+                if (!generateProfileLevelIdForAnswer(aParameters, bParameters, answerParameters)) {
+                    return false
+                }
 
                 if (modify) {
-                    newParameters["profile-level-id"]?.also {
-                        parameters += "profile-level-id" to it
+                    answerParameters[H264_FMTP_PROFILE_LEVEL_ID]?.also {
+                        parameters += H264_FMTP_PROFILE_LEVEL_ID to it
                     } ?: run {
-                        parameters -= "profile-level-id"
+                        parameters -= H264_FMTP_PROFILE_LEVEL_ID
                     }
                 }
             }
