@@ -10,7 +10,7 @@ abstract class Transport(
     protected open val listener: Listener,
     val id: String,
     protected val extendedRtpCapabilities: ExtendedRtpCapabilities,
-    val appData: Map<String, Any>? = null
+    val appData: Any? = null
 ) : Handler.PrivateListener {
     internal abstract val handler: Handler
 

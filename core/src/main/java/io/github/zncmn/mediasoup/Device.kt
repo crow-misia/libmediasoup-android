@@ -1,6 +1,5 @@
 package io.github.zncmn.mediasoup
 
-import com.squareup.moshi.Moshi
 import io.github.zncmn.mediasoup.model.*
 import io.github.zncmn.webrtc.log.WebRtcLogger
 import org.webrtc.PeerConnection
@@ -12,7 +11,6 @@ class Device(
     companion object {
         private val TAG = Device::class.simpleName
     }
-    private val moshi = Moshi.Builder().build()
 
     /**
      * Whether the Device is loaded.
@@ -25,7 +23,7 @@ class Device(
         private set
 
     /** Local RTP capabilities for receiving media. */
-    lateinit var recvRtpCapabilities: RtpCapabilities
+    lateinit var rtpCapabilities: RtpCapabilities
         private set
 
     /** Whether we can produce audio/video based on computed extended RTP capabilities. */
@@ -53,31 +51,31 @@ class Device(
 
         // get Native RTP capabilities.
         val nativeRtpCapabilities = Handler.getNativeRtpCapabilities(peerConnectionFactory)
-        WebRtcLogger.d(TAG, "got native RTP capabilities:\n%s", moshi.adapter(RtpCapabilities::class.java).indent("  ").toJson(nativeRtpCapabilities))
+        WebRtcLogger.d(TAG, "got native RTP capabilities:\n%s", rtpCapabilitiesAdapter.indent("  ").toJson(nativeRtpCapabilities))
 
         // This may throw.
         nativeRtpCapabilities.validate()
 
         // Get extended RTP capability.
         extendedRtpCapabilities = nativeRtpCapabilities.extended(routerRtpCapabilities)
-        WebRtcLogger.d(TAG, "got extended RTP capabilities:\n%s", moshi.adapter(ExtendedRtpCapabilities::class.java).indent("  ").toJson(extendedRtpCapabilities))
+        WebRtcLogger.d(TAG, "got extended RTP capabilities:\n%s", extendedRtpCapabilitiesAdapter.indent("  ").toJson(extendedRtpCapabilities))
 
         // Check whether we can produce audio/video.
         canProduceByKind["audio"] = extendedRtpCapabilities.canSend("audio")
         canProduceByKind["video"] = extendedRtpCapabilities.canSend("video")
 
         // Generate our receiving RTP capabilities for receiving media.
-        recvRtpCapabilities = extendedRtpCapabilities.getRecvRtpCapabilities()
+        rtpCapabilities = extendedRtpCapabilities.getRecvRtpCapabilities()
 
-        WebRtcLogger.d(TAG, "got receiving RTP capabilities:\n%s", moshi.adapter(RtpCapabilities::class.java).indent(" ").toJson(recvRtpCapabilities))
+        WebRtcLogger.d(TAG, "got receiving RTP capabilities:\n%s", rtpCapabilitiesAdapter.indent(" ").toJson(rtpCapabilities))
 
         // This may throw.
-        recvRtpCapabilities.validate()
+        rtpCapabilities.validate()
 
         // Generate our SCTP capabilities.
         sctpCapabilities = Handler.getNativeSctpCapabilities()
 
-        WebRtcLogger.d(TAG, "got receiving SCTP capabilities:\n%s", moshi.adapter(SctpCapabilities::class.java).indent(" ").toJson(sctpCapabilities))
+        WebRtcLogger.d(TAG, "got receiving SCTP capabilities:\n%s", sctpCapabilitiesAdapter.indent(" ").toJson(sctpCapabilities))
 
         // This may throw.
         sctpCapabilities.validate()
@@ -109,7 +107,7 @@ class Device(
         dtlsParameters: DtlsParameters,
         sctpParameters: SctpParameters?,
         rtcConfig: PeerConnection.RTCConfiguration,
-        appData: Map<String, Any>? = null
+        appData: Any? = null
     ): SendTransport {
         check(loaded) { "not loaded" }
 
@@ -135,6 +133,7 @@ class Device(
         )
     }
 
+    @JvmOverloads
     @Throws(MediasoupException::class)
     fun createRecvTransport(
         listener: RecvTransport.Listener,
@@ -144,7 +143,7 @@ class Device(
         dtlsParameters: DtlsParameters,
         sctpParameters: SctpParameters?,
         rtcConfig: PeerConnection.RTCConfiguration,
-        appData: Map<String, Any>?
+        appData: Any? = null
     ): RecvTransport {
         check(loaded) { "not loaded" }
 

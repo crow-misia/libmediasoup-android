@@ -1,5 +1,6 @@
 package io.github.zncmn.mediasoup
 
+import io.github.zncmn.mediasoup.model.MediaKind
 import io.github.zncmn.mediasoup.model.RtpParameters
 import io.github.zncmn.webrtc.log.WebRtcLogger
 import org.webrtc.MediaStreamTrack
@@ -33,9 +34,9 @@ class Consumer internal constructor(
     var closed: Boolean = false
         private set
 
-    val kind: String = track.kind()
+    val kind: MediaKind = track.kind()
 
-    val isPaused: Boolean
+    val paused: Boolean
         get() = !track.enabled()
 
     val stats: RTCStatsReport

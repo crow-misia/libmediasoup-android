@@ -257,7 +257,7 @@ class OfferMediaSection(
                 val rtxSsrc = encoding.rtx?.ssrc ?: 0L
 
                 val rtcp = offerRtpParameters.rtcp
-                val cname = rtcp?.cname ?: ""
+                val cname = rtcp.cname ?: ""
                 val msid = "$streamId $trackId"
                 if (cname.isNotEmpty()) {
                     mediaDescription.addAttribute(SsrcAttribute.of(ssrc, "cname", cname))

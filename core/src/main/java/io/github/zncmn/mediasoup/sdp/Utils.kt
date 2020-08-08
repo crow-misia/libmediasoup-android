@@ -163,7 +163,7 @@ internal fun SdpMediaDescription.getCname(): String? {
 
 internal fun SdpMediaDescription.getRtpEncodings(): List<RtpEncodingParameters> {
     val ssrcs = getAttributes(SsrcAttribute::class).map { it.id }.toHashSet()
-    assert(ssrcs.isNotEmpty()) { "no a=ssrc line found" }
+    check(ssrcs.isNotEmpty()) { "no a=ssrc line found" }
 
     val ssrcToRtxSsrc = linkedMapOf<Long, Long>()
     getAttributes(SsrcGroupAttribute::class).filter { it.semantics == "FID" }.forEach {

@@ -18,7 +18,7 @@ class RecvTransport internal constructor(
     rtcConfig: PeerConnection.RTCConfiguration,
     peerConnectionFactory: PeerConnectionFactory,
     extendedRtpCapabilities: ExtendedRtpCapabilities,
-    appData: Map<String, Any>?
+    appData: Any?
 ) : Transport(listener, id, extendedRtpCapabilities, appData), Consumer.PrivateListener {
     companion object {
         private val TAG = RecvTransport::class.simpleName
@@ -45,7 +45,7 @@ class RecvTransport internal constructor(
     @JvmOverloads
     @Throws(MediasoupException::class)
     suspend fun consume(
-        consumerListener: Consumer.Listener,
+        listener: Consumer.Listener,
         id: String,
         producerId: String,
         kind: MediaKind,
@@ -66,7 +66,7 @@ class RecvTransport internal constructor(
 
         val consumer = Consumer(
             this,
-            consumerListener,
+            listener,
             id,
             localId,
             producerId,

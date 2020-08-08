@@ -59,7 +59,7 @@ android {
 
     kotlin {
         kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libmediasoup-android")
+            freeCompilerArgs = listOf("-Xjsr305=strict")
             jvmTarget = "1.8"
         }
     }

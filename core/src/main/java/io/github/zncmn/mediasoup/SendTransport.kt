@@ -19,7 +19,7 @@ class SendTransport internal constructor(
     peerConnectionFactory: PeerConnectionFactory,
     extendedRtpCapabilities: ExtendedRtpCapabilities,
     private val canProduceByKind: Map<MediaKind, Boolean>,
-    appData: Map<String, Any>?
+    appData: Any?
 ) : Transport(listener, id, extendedRtpCapabilities, appData), Producer.PrivateListener {
     val maxSctpMessageSize = sctpParameters?.maxMessageSize
 
@@ -50,7 +50,7 @@ class SendTransport internal constructor(
         /**
          * @return producer Id
          */
-        fun onProduce(transport: Transport, kind: MediaKind, rtpParameters: RtpParameters, appData: Map<String, Any>?): String
+        fun onProduce(transport: Transport, kind: MediaKind, rtpParameters: RtpParameters, appData: Any?): String
     }
 
     /**
@@ -59,11 +59,11 @@ class SendTransport internal constructor(
     @JvmOverloads
     @Throws(MediasoupException::class)
     suspend fun produce(
-        producerListener: Producer.Listener,
+        listener: Producer.Listener,
         track: MediaStreamTrack,
         encodings: List<RtpEncodingParameters>,
         codecOptions: ProducerCodecOptions?,
-        appData: Map<String, Any>? = null
+        appData: Any? = null
     ): Producer {
         check(!closed) { "SendTransport closed" }
         check(track.state() != MediaStreamTrack.State.ENDED) { "track ended" }
@@ -81,7 +81,7 @@ class SendTransport internal constructor(
             rtpParameters.validate()
 
             // May throw.
-            producerId = listener.onProduce(this, track.kind(), rtpParameters, appData)
+            producerId = this.listener.onProduce(this, track.kind(), rtpParameters, appData)
         } catch (e: MediasoupException) {
             handler.stopSending(localId)
 
@@ -90,7 +90,7 @@ class SendTransport internal constructor(
 
         val producer = Producer(
             privateListener = this,
-            listener = producerListener,
+            listener = listener,
             id = producerId,
             localId = localId,
             rtpSender = rtpSender,

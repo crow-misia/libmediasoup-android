@@ -97,6 +97,7 @@ sealed class Handler(
     }
 
     fun dispose() {
+        mapMidTransceiver.values.forEach { it.dispose() }
         peerConnection.dispose()
     }
 

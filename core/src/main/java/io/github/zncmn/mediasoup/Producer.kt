@@ -14,7 +14,7 @@ class Producer internal constructor(
     val rtpSender: RtpSender,
     track: MediaStreamTrack,
     val rtpParameters: RtpParameters,
-    val appData: Map<String, Any>? = null
+    val appData: Any? = null
 ) {
     companion object {
         private val TAG = Producer::class.simpleName
@@ -45,7 +45,7 @@ class Producer internal constructor(
 
             // If this Producer was paused/resumed and the state of the new
             // track does not match, fix it.
-            value.setEnabled(!isPaused)
+            value.setEnabled(!paused)
 
             field = value
         }
@@ -55,7 +55,7 @@ class Producer internal constructor(
     var closed: Boolean = false
         private set
 
-    val isPaused: Boolean
+    val paused: Boolean
         get() = !track.enabled()
 
     var maxSpatialLayer: Int = 0
