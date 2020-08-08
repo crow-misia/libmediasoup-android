@@ -3,5 +3,5 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = "libmediasoup-android"
+rootProject.name = "libmediasoup-client-android"
 include("core")
