@@ -1,79 +1,119 @@
 package io.github.zncmn.mediasoup
 
-import io.github.zncmn.mediasoup.model.MediaKind
-import io.github.zncmn.mediasoup.model.RtpParameters
-import io.github.zncmn.webrtc.log.WebRtcLogger
+import org.webrtc.CalledByNative
 import org.webrtc.MediaStreamTrack
-import org.webrtc.RTCStatsReport
+import org.webrtc.RTCUtils
 import org.webrtc.RtpReceiver
 
-class Consumer internal constructor(
-    private val privateListener: PrivateListener,
-    private val listener: Listener,
-    val id: String,
-    val localId: String,
-    val producerId: String,
-    val rtpReceiver: RtpReceiver,
-    val track: MediaStreamTrack,
-    val rtpParameters: RtpParameters,
-    val appData: Any? = null
+class Consumer @CalledByNative private constructor(
+    private var nativeConsumer: Long
 ) {
-    companion object {
-        private val TAG = Consumer::class.simpleName
-    }
-
     interface Listener {
+        @CalledByNative("Listener")
         fun onTransportClose(consumer: Consumer)
     }
 
-    internal interface PrivateListener {
-        fun onClose(consumer: Consumer)
-        fun onGetStats(consumer: Consumer): RTCStatsReport
+    val id: String by lazy {
+        checkConsumerExists()
+        nativeGetId(nativeConsumer)
     }
 
-    var closed: Boolean = false
-        private set
+    val localId: String by lazy {
+        checkConsumerExists()
+        nativeGetLocalId(nativeConsumer)
+    }
 
-    val kind: MediaKind = track.kind()
+    val producerId: String by lazy {
+        checkConsumerExists()
+        nativeGetProducerId(nativeConsumer)
+    }
+
+    val closed: Boolean
+        get() {
+            checkConsumerExists()
+            return nativeIsClosed(nativeConsumer)
+        }
 
     val paused: Boolean
-        get() = !track.enabled()
-
-    val stats: RTCStatsReport
         get() {
-            check(!closed) { "Consumer closed" }
-            return privateListener.onGetStats(this)
+            checkConsumerExists()
+            return nativeIsPaused(nativeConsumer)
         }
 
-    fun close() {
-        if (closed) {
-            return
+    val kind: String by lazy {
+        checkConsumerExists()
+        nativeGetKind(nativeConsumer)
+    }
+
+    val rtpReceiver: RtpReceiver by lazy {
+        checkConsumerExists()
+        val nativeRtpReceiver = nativeGetRtpReceiver(nativeConsumer)
+        RtpReceiver(nativeRtpReceiver)
+    }
+
+    val track: MediaStreamTrack by lazy {
+        checkConsumerExists()
+        val nativeTrack = nativeGetTrack(nativeConsumer)
+        RTCUtils.createMediaStreamTrack(nativeTrack)
+    }
+
+    val rtpParameters: String by lazy {
+        checkConsumerExists()
+        nativeGetRtpParameters(nativeConsumer)
+    }
+
+    val appData: String by lazy {
+        checkConsumerExists()
+        nativeGetAppData(nativeConsumer)
+    }
+
+    val stats: String
+        get() {
+            checkConsumerExists()
+            return nativeGetStats(nativeConsumer)
         }
-        closed = true
-        privateListener.onClose(this)
+
+    fun resume() {
+        checkConsumerExists()
+        nativeResume(nativeConsumer)
     }
 
     fun pause() {
-        if (closed) {
-            WebRtcLogger.e(TAG, "Consumer closed")
-            return
-        }
-        track.setEnabled(false)
+        checkConsumerExists()
+        nativePause(nativeConsumer)
     }
 
-    fun resume() {
-        if (closed) {
-            WebRtcLogger.e(TAG, "Consumer closed")
-            return
-        }
-        track.setEnabled(true)
+    fun close() {
+        checkConsumerExists()
+        nativeClose(nativeConsumer)
     }
 
-    internal fun transportClosed() {
-        if (closed) {
+    fun dispose() {
+        val ptr = nativeConsumer
+        if (ptr == 0L) {
             return
         }
-        closed = true
-        listener.onTransportClose(this)
+        nativeConsumer = 0L
+        nativeDispose(ptr)
     }
+
+    private fun checkConsumerExists() {
+        check(nativeConsumer != 0L) { "Consumer has been disposed." }
+    }
+
+    private external fun nativeGetId(nativeConsumer: Long): String
+    private external fun nativeGetLocalId(nativeConsumer: Long): String
+    private external fun nativeGetProducerId(nativeConsumer: Long): String
+    private external fun nativeIsClosed(nativeConsumer: Long): Boolean
+    private external fun nativeGetKind(nativeConsumer: Long): String
+    private external fun nativeGetRtpReceiver(nativeConsumer: Long): Long
+    private external fun nativeGetTrack(nativeConsumer: Long): Long
+    private external fun nativeGetRtpParameters(nativeConsumer: Long): String
+    private external fun nativeIsPaused(nativeConsumer: Long): Boolean
+    private external fun nativeGetAppData(nativeConsumer: Long): String
+    private external fun nativeClose(nativeConsumer: Long)
+    private external fun nativeGetStats(nativeConsumer: Long): String
+    private external fun nativePause(nativeConsumer: Long)
+    private external fun nativeResume(nativeConsumer: Long)
+    private external fun nativeDispose(nativeConsumer: Long)
 }

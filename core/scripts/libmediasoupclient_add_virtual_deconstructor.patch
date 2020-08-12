@@ -1,0 +1,20 @@
+--- a/include/Transport.hpp	2020-07-14 03:44:00.000000000 +0900
++++ b/include/Transport.hpp	2020-08-08 19:44:01.000000000 +0900
+@@ -42,6 +42,7 @@ namespace mediasoupclient
+ 		  const nlohmann::json& appData);
+ 
+ 	public:
++		virtual ~Transport() = default;
+ 		const std::string& GetId() const;
+ 		bool IsClosed() const;
+ 		const std::string& GetConnectionState() const;
+--- libmediasoupclient.bk/include/Logger.hpp	2020-07-14 03:44:00.000000000 +0900
++++ libmediasoupclient/include/Logger.hpp	2020-08-12 22:19:57.000000000 +0900
+@@ -64,6 +64,7 @@ namespace mediasoupclient
+ 		class LogHandlerInterface
+ 		{
+ 		public:
++		    virtual ~LogHandlerInterface() = default;
+ 			virtual void OnLog(LogLevel level, char* payload, size_t len) = 0;
+ 		};
+ 

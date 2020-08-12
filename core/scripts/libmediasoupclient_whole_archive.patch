@@ -1,0 +1,11 @@
+--- a/CMakeLists.txt	2020-08-10 08:15:41.000000000 +0900
++++ b/CMakeLists.txt	2020-08-10 08:15:17.000000000 +0900
+@@ -130,7 +130,7 @@ target_include_directories(${PROJECT_NAM
+ # Public (interface) dependencies.
+ target_link_libraries(${PROJECT_NAME} PUBLIC
+ 	sdptransform
+-	${LIBWEBRTC_BINARY_PATH}/libwebrtc${CMAKE_STATIC_LIBRARY_SUFFIX}
++	-Wl,--whole-archive ${LIBWEBRTC_BINARY_PATH}/libwebrtc${CMAKE_STATIC_LIBRARY_SUFFIX} -Wl,--no-whole-archive
+ )
+ 
+ # Compile definitions for libwebrtc.

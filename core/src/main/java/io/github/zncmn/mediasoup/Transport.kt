@@ -1,69 +1,78 @@
 package io.github.zncmn.mediasoup
 
-import io.github.zncmn.mediasoup.model.DtlsParameters
-import io.github.zncmn.mediasoup.model.ExtendedRtpCapabilities
-import io.github.zncmn.mediasoup.model.IceParameters
 import org.webrtc.PeerConnection
-import org.webrtc.RTCStatsReport
 
-abstract class Transport(
-    protected open val listener: Listener,
-    val id: String,
-    protected val extendedRtpCapabilities: ExtendedRtpCapabilities,
-    val appData: Any? = null
-) : Handler.PrivateListener {
-    internal abstract val handler: Handler
+abstract class Transport {
+    interface Listener {
+        fun onConnect(transport: Transport, dtlsParameters: String)
 
-    var connectionState: PeerConnection.IceConnectionState = PeerConnection.IceConnectionState.NEW
-        private set
+        fun onConnectionStateChange(transport: Transport, newState: String)
+    }
 
-    var closed: Boolean = false
-        private set
+    protected abstract var nativeTransport: Long
 
-    val stats: RTCStatsReport
+    val id: String by lazy {
+        checkTransportExists()
+        nativeGetId(nativeTransport)
+    }
+
+    val connectionState: PeerConnection.IceConnectionState
         get() {
-            check(!closed) { "Transport closed" }
-            return handler.transportStats
+            checkTransportExists()
+            val state = nativeGetConnectionState(nativeTransport)
+            return PeerConnection.IceConnectionState.valueOf(state)
         }
 
-    open fun close() {
-        if (closed) {
-            return
+    val appData: String by lazy {
+        checkTransportExists()
+        nativeGetAppData(nativeTransport)
+    }
+
+    val stats: String
+        get() {
+            checkTransportExists()
+            return nativeGetStats(nativeTransport)
         }
-        closed = true
-        handler.close()
-    }
 
-    fun dispose() {
-        close()
-        handler.dispose()
-    }
+    val closed: Boolean
+        get() {
+            checkTransportExists()
+            return nativeIsClosed(nativeTransport)
+        }
 
-    suspend fun restartIce(iceParameters: IceParameters) {
-        check(!closed) { "Transport closed" }
-        handler.restartIce(iceParameters)
+    fun restartIce(iceParameters: String) {
+        checkTransportExists()
+        nativeRestartIce(nativeTransport, iceParameters)
     }
 
     fun updateIceServers(iceServers: List<String>) {
-        check(!closed) { "Transport closed" }
-        handler.updateIceServers(iceServers)
+        checkTransportExists()
+        nativeUpdateIceServers(nativeTransport, iceServers.joinToString(","))
     }
 
-    override fun onConnect(dtlsParameters: DtlsParameters) {
-        check(!closed) { "Transport closed" }
-        listener.onConnect(this, dtlsParameters)
+    fun close() {
+        checkTransportExists()
+        nativeClose(nativeTransport)
     }
 
-    override fun onConnectionStateChange(newState: PeerConnection.IceConnectionState) {
-        // Update connection state.
-        this.connectionState = connectionState
-
-        listener.onConnectionStateChange(this, newState)
+    fun dispose() {
+        val transport = nativeTransport
+        if (transport == 0L) {
+            return
+        }
+        nativeTransport = 0L
+        nativeDispose(transport)
     }
 
-    interface Listener {
-        fun onConnect(transport: Transport, dtlsParameters: DtlsParameters)
+    protected abstract fun checkTransportExists()
 
-        fun onConnectionStateChange(transport: Transport, newState: PeerConnection.IceConnectionState)
-    }
+    private external fun nativeGetId(transport: Long): String
+    private external fun nativeIsClosed(transport: Long): Boolean
+    private external fun nativeGetConnectionState(transport: Long): String
+    private external fun nativeGetAppData(transport: Long): String
+    private external fun nativeClose(transport: Long)
+    private external fun nativeGetStats(transport: Long): String
+    private external fun nativeRestartIce(transport: Long, iceParameters: String)
+    private external fun nativeUpdateIceServers(transport: Long, iceServers: String)
+    private external fun nativeDispose(transport: Long)
 }

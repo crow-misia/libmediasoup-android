@@ -5,17 +5,12 @@ import com.jfrog.bintray.gradle.BintrayExtension
 plugins {
     id("com.android.library")
     kotlin("android")
-    kotlin("kapt")
     `maven-publish`
     id("com.jfrog.bintray") version Versions.bintrayPlugin
 }
 
 group = Maven.groupId
 version = Versions.core
-
-kapt {
-    correctErrorTypes = true
-}
 
 android {
     buildToolsVersion(Versions.buildTools)
@@ -26,6 +21,22 @@ android {
         consumerProguardFiles("consumer-proguard-rules.pro")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            cmake {
+                arguments = listOf(
+                    "-DLIBWEBRTC_INCLUDE_PATH=${projectDir}/deps/webrtc/include",
+                    "-DLIBWEBRTC_BINARY_ANDROID_PATH=${projectDir}/deps/webrtc/lib",
+                    "-DLIBMEDIASOUPCLIENT_ROOT_PATH=${projectDir}/deps/libmediasoupclient",
+                    "-DMEDIASOUPCLIENT_BUILD_TESTS=OFF"
+                )
+            }
+        }
+
+        ndk {
+            ndkVersion = Versions.ndk
+            setAbiFilters(listOf("armeabi-v7a", "arm64-v8a"))
+        }
     }
 
     lintOptions {
@@ -43,14 +54,28 @@ android {
         getByName("debug") {
             isDebuggable = true
             isJniDebuggable = true
+            externalNativeBuild {
+                cmake {
+                    arguments = listOf(
+                        "-DMEDIASOUPCLIENT_LOG_TRACE=ON",
+                        "-DMEDIASOUPCLIENT_LOG_DEV=ON"
+                    )
+                }
+            }
         }
         getByName("release") {
             isDebuggable = false
             isJniDebuggable = false
+            externalNativeBuild {
+                cmake {
+                    arguments = listOf(
+                        "-DMEDIASOUPCLIENT_LOG_TRACE=OFF",
+                        "-DMEDIASOUPCLIENT_LOG_DEV=OFF"
+                    )
+                }
+            }
         }
     }
-
-    ndkVersion = Versions.ndk
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -63,17 +88,19 @@ android {
             jvmTarget = "1.8"
         }
     }
+
+    externalNativeBuild {
+        cmake {
+            path = file("${projectDir}/CMakeLists.txt")
+        }
+    }
+    ndkVersion = Versions.ndk
 }
 
 dependencies {
     api(kotlin("stdlib"))
-    api(Deps.coroutinsCore)
-    api(Deps.coroutinsAndroid)
-    api(Deps.moshi)
-    kapt(Deps.moshiCodegen)
-    api(Deps.webrtc)
+    implementation(fileTree(mapOf("dir" to "${projectDir}/deps/webrtc/lib", "include" to arrayOf("*.jar"))))
     api(Deps.webrtcKtx)
-    api(Deps.sdp)
 
     testImplementation(Deps.junit)
     testImplementation(Deps.assertk)

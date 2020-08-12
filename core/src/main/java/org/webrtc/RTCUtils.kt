@@ -1,18 +1,11 @@
 package org.webrtc
 
-import io.github.zncmn.mediasoup.model.RtpEncodingParameters
+internal object RTCUtils {
+    fun createMediaStreamTrack(track: Long): MediaStreamTrack {
+        return checkNotNull(MediaStreamTrack.createMediaStreamTrack(track)) { "nativeTrack may not be null" }
+    }
 
-fun RtpEncodingParameters.toRtpParametersEncoding(): RtpParameters.Encoding {
-    return RtpParameters.Encoding(
-        rid,
-        active ?: true,
-        bitratePriority ?: 1.0,
-        networkPriority ?: 1,
-        maxBitrate,
-        minBitrate,
-        maxFramerate,
-        numTemporalLayers,
-        scaleResolutionDownBy,
-        ssrc
-    )
+    fun getNativeMediaStreamTrack(mediaStreamTrack: MediaStreamTrack): Long {
+        return mediaStreamTrack.nativeMediaStreamTrack
+    }
 }

@@ -1,114 +1,142 @@
 package io.github.zncmn.mediasoup
 
-import io.github.zncmn.mediasoup.model.RtpParameters
-import io.github.zncmn.webrtc.log.WebRtcLogger
+import org.webrtc.CalledByNative
 import org.webrtc.MediaStreamTrack
-import org.webrtc.RTCStatsReport
+import org.webrtc.RTCUtils
 import org.webrtc.RtpSender
 
 class Producer internal constructor(
-    private val privateListener: PrivateListener,
-    private val listener: Listener,
-    val id: String,
-    val localId: String,
-    val rtpSender: RtpSender,
-    track: MediaStreamTrack,
-    val rtpParameters: RtpParameters,
-    val appData: Any? = null
+    private var nativeProducer: Long
 ) {
-    companion object {
-        private val TAG = Producer::class.simpleName
-    }
-
     interface Listener {
+        @CalledByNative("Listener")
         fun onTransportClose(producer: Producer)
     }
 
-    internal interface PrivateListener {
-        fun onClose(producer: Producer)
-        fun onReplaceTrack(producer: Producer, track: MediaStreamTrack)
-        fun onSetMaxSpatialLayer(producer: Producer, maxSpatialLayer: Int)
-        fun onGetStats(producer: Producer): RTCStatsReport
+    private var cachedTrack: MediaStreamTrack?
+
+    val id: String by lazy {
+        checkDeviceExists()
+        nativeGetId(nativeProducer)
     }
 
-    var track: MediaStreamTrack = track
-        internal set(value) {
-            check(!closed) { "Producer closed" }
-            check(value.state() != MediaStreamTrack.State.ENDED) { "track ended" }
+    val localId: String by lazy {
+        checkDeviceExists()
+        nativeGetLocalId(nativeProducer)
+    }
 
-            if (field == value) {
-                WebRtcLogger.d(TAG, "same track, ignored")
-                return
-            }
-
-            privateListener.onReplaceTrack(this, track)
-
-            // If this Producer was paused/resumed and the state of the new
-            // track does not match, fix it.
-            value.setEnabled(!paused)
-
-            field = value
+    val closed: Boolean
+        get() {
+            checkDeviceExists()
+            return nativeIsClosed(nativeProducer)
         }
-
-    val kind: String = track.kind()
-
-    var closed: Boolean = false
-        private set
 
     val paused: Boolean
-        get() = !track.enabled()
-
-    var maxSpatialLayer: Int = 0
-        set(layer) {
-            check(!closed) { "Producer closed" }
-            if (kind == "video") {
-                throw MediasoupException("not a video Producer")
-            }
-            if (layer == field) {
-                return
-            }
-
-            // May throw.
-            privateListener.onSetMaxSpatialLayer(this, layer)
-
-            field = layer
+        get() {
+            checkDeviceExists()
+            return nativeIsPaused(nativeProducer)
         }
+
+    val kind: String by lazy {
+        checkDeviceExists()
+        nativeGetKind(nativeProducer)
+    }
+
+    val rtpSender: RtpSender by lazy {
+        checkDeviceExists()
+        val nativeRtpSender = nativeGetRtpSender(nativeProducer)
+        RtpSender(nativeRtpSender)
+    }
+
+    var track: MediaStreamTrack?
+        get() = cachedTrack
+        set(value) {
+            checkDeviceExists()
+            cachedTrack = value?.also {
+                val nativeTrack = RTCUtils.getNativeMediaStreamTrack(it)
+                nativeReplaceTrack(nativeProducer, nativeTrack)
+            }
+        }
+
+    var maxSpatialLayer: Int
+        get() {
+            checkDeviceExists()
+            return nativeGetMaxSpatialLayer(nativeProducer)
+        }
+        set(value) {
+            checkDeviceExists()
+            nativeSetMaxSpatialLayer(nativeProducer, value)
+        }
+
+    val rtpParameters: String by lazy {
+        checkDeviceExists()
+        nativeGetRtpParameters(nativeProducer)
+    }
+
+    val appData: String by lazy {
+        checkDeviceExists()
+        nativeGetAppData(nativeProducer)
+    }
+
+    val stats: String
+        get() {
+            checkDeviceExists()
+            return nativeGetStats(nativeProducer)
+        }
+
+    init {
+        val nativeTrack = nativeGetTrack(nativeProducer)
+        cachedTrack = RTCUtils.createMediaStreamTrack(nativeTrack)
+    }
 
     fun resume() {
-        if (closed) {
-            WebRtcLogger.e(TAG, "Producer closed")
-            return
-        }
-        track.setEnabled(true)
+        checkDeviceExists()
+        nativeResume(nativeProducer)
     }
 
     fun pause() {
-        if (closed) {
-            WebRtcLogger.e(TAG, "Producer closed")
-            return
-        }
-        track.setEnabled(false)
+        checkDeviceExists()
+        nativePause(nativeProducer)
     }
-
-    val stats: RTCStatsReport
-        get() {
-            check(!closed) { "Producer closed" }
-            return privateListener.onGetStats(this)
-        }
 
     fun close() {
-        if (closed) {
-            return
-        }
-        closed = true
-        privateListener.onClose(this)
+        checkDeviceExists()
+        cachedTrack?.dispose()
+        cachedTrack = null
+        nativeClose(nativeProducer)
     }
 
-    internal fun transportClosed() {
-        if (closed) {
+    fun dispose() {
+        cachedTrack?.dispose()
+        cachedTrack = null
+
+        val ptr = nativeProducer
+        if (ptr == 0L) {
             return
         }
-        closed = true
-        listener.onTransportClose(this)
+        nativeProducer = 0L
+        nativeDispose(ptr)
     }
+
+    private fun checkDeviceExists() {
+        check(nativeProducer != 0L) { "Producer has been disposed." }
+    }
+
+    private external fun nativeGetId(nativeProducer: Long): String
+    private external fun nativeGetLocalId(nativeProducer: Long): String
+    private external fun nativeIsClosed(nativeProducer: Long): Boolean
+    private external fun nativeGetKind(nativeProducer: Long): String
+    private external fun nativeGetRtpSender(nativeProducer: Long): Long
+    private external fun nativeGetTrack(nativeProducer: Long): Long
+    private external fun nativeGetRtpParameters(nativeProducer: Long): String
+    private external fun nativeIsPaused(nativeProducer: Long): Boolean
+    private external fun nativeGetMaxSpatialLayer(nativeProducer: Long): Int
+    private external fun nativeGetAppData(nativeProducer: Long): String
+    private external fun nativeClose(nativeProducer: Long)
+    private external fun nativeGetStats(nativeProducer: Long): String
+    private external fun nativePause(nativeProducer: Long)
+    private external fun nativeResume(nativeProducer: Long)
+    private external fun nativeReplaceTrack(nativeProducer: Long, track: Long)
+    private external fun nativeSetMaxSpatialLayer(nativeProducer: Long, spatialLayer: Int)
+    private external fun nativeDispose(nativeProducer: Long)
 }

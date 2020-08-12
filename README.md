@@ -20,22 +20,17 @@ dependencies {
 }
 ```
 
-Make sure that you have either `jcenter()` and `maven { url 'https://jitpack.io' }` in the list of repositories:
+Make sure that you have either `jcenter()` in the list of repositories:
 
 ```
 repository {
     jcenter()
-    maven { url 'https://jitpack.io' }
 }
 ```
 
 ## Dependencies
 
-* [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines)
-* [moshi](https://github.com/square/moshi)
-* [libwebrtc-bin](https://github.com/crow-misia/libwebrtc-bin)
 * [libwebrtc-ktx](https://github.com/crow-misia/libwebrtc-ktx)
-* [sdp](https://github.com/crow-misia/sdp)
 
 ## Demo project
 

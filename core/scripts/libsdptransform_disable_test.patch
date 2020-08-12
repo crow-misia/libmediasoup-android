@@ -1,0 +1,11 @@
+--- a/deps/libsdptransform/CMakeLists.txt   2020-06-25 18:17:54.000000000 +0900
++++ b/deps/libsdptransform/CMakeLists.txt   2020-05-26 15:23:40.000000000 +0900
+@@ -9,8 +9,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
+ # For CMake < 3.1.
+ add_compile_options(-std=c++11)
+
+-subdirs(test readme-helper)
+-
+ include_directories(${sdptransform_SOURCE_DIR}/include)
+
+ set(
