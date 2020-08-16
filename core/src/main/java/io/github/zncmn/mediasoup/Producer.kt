@@ -5,7 +5,7 @@ import org.webrtc.MediaStreamTrack
 import org.webrtc.RTCUtils
 import org.webrtc.RtpSender
 
-class Producer internal constructor(
+class Producer @CalledByNative internal constructor(
     private var nativeProducer: Long
 ) {
     interface Listener {

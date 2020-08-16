@@ -1,11 +1,14 @@
 package io.github.zncmn.mediasoup
 
+import org.webrtc.CalledByNative
 import org.webrtc.PeerConnection
 
 abstract class Transport {
     interface Listener {
+        @CalledByNative("Listener")
         fun onConnect(transport: Transport, dtlsParameters: String)
 
+        @CalledByNative("Listener")
         fun onConnectionStateChange(transport: Transport, newState: String)
     }
 
