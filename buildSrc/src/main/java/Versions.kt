@@ -1,5 +1,5 @@
 object Versions {
-    const val kotlin = "1.4.0"
+    const val kotlin = "1.4.10"
     const val gradlePlugin = "4.0.1"
     const val bintrayPlugin = "1.8.5"
 
