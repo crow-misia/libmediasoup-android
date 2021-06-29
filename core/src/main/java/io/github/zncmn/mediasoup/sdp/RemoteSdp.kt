@@ -1,12 +1,13 @@
 package io.github.zncmn.mediasoup.sdp
 
 import io.github.zncmn.mediasoup.model.*
-import io.github.zncmn.sdp.*
-import io.github.zncmn.sdp.attribute.FingerprintAttribute
-import io.github.zncmn.sdp.attribute.GroupAttribute
-import io.github.zncmn.sdp.attribute.IceLiteAttribute
-import io.github.zncmn.sdp.attribute.MsidSemanticAttribute
-import io.github.zncmn.webrtc.log.WebRtcLogger
+import io.github.crow_misia.sdp.*
+import io.github.crow_misia.sdp.attribute.FingerprintAttribute
+import io.github.crow_misia.sdp.attribute.GroupAttribute
+import io.github.crow_misia.sdp.attribute.IceLiteAttribute
+import io.github.crow_misia.sdp.attribute.MsidSemanticAttribute
+import io.github.crow_misia.webrtc.log.WebRtcLogger
+import java.math.BigInteger
 
 class RemoteSdp(
     private var iceParameters: IceParameters,
@@ -34,8 +35,8 @@ class RemoteSdp(
             unicastAddress = "0.0.0.0",
             addrtype = "IP4",
             nettype = "IN",
-            sessId = 10000,
-            sessVersion = 0,
+            sessId = BigInteger("10000"),
+            sessVersion = BigInteger.ZERO,
             username = "libmediasoupclient"
         ),
         sessionName = SdpSessionName.of("-"),
@@ -174,6 +175,6 @@ class RemoteSdp(
 
     private fun regenerateBundleMids() {
         val mids = sessionDescription.getMediaDescriptions().filterNot { it.isClosed() }.map { it.mid }.toMutableList()
-        sessionDescription.getAttribute(GroupAttribute::class)?.mids = mids
+        sessionDescription.getAttribute<GroupAttribute>()?.mids = mids
     }
 }

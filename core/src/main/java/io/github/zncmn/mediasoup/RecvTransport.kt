@@ -1,7 +1,7 @@
 package io.github.zncmn.mediasoup
 
 import io.github.zncmn.mediasoup.model.*
-import io.github.zncmn.webrtc.log.WebRtcLogger
+import io.github.crow_misia.webrtc.log.WebRtcLogger
 import kotlinx.coroutines.runBlocking
 import org.webrtc.PeerConnection
 import org.webrtc.PeerConnectionFactory

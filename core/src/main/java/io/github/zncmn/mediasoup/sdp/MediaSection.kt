@@ -1,10 +1,9 @@
 package io.github.zncmn.mediasoup.sdp
 
+import io.github.crow_misia.sdp.*
 import io.github.zncmn.mediasoup.MediasoupException
 import io.github.zncmn.mediasoup.model.*
-import io.github.zncmn.sdp.SdpConnection
-import io.github.zncmn.sdp.SdpMediaDescription
-import io.github.zncmn.sdp.attribute.*
+import io.github.crow_misia.sdp.attribute.*
 import java.util.*
 
 sealed class MediaSection(
@@ -83,7 +82,7 @@ class AnswerMediaSection(
                     if (codecOptions != null && offerCodec != null) {
                         val offerCodecParameters = offerCodec.parameters.toMutableMap()
                         offerCodec.parameters = offerCodecParameters
-                        when (offerCodec.mimeType.toLowerCase(Locale.ENGLISH)) {
+                        when (offerCodec.mimeType.lowercase(Locale.ENGLISH)) {
                             "audio/opus" -> {
                                 setParameterBool(codecOptions.opusStereo, "sprop-stereo", "stereo", offerCodecParameters, codecParameters)
 
@@ -118,11 +117,11 @@ class AnswerMediaSection(
                     }
                 }
 
-                answerRtpParameters.codecs.forEach { mediaDescription.formats.add(it.payloadType) }
+                answerRtpParameters.codecs.forEach { mediaDescription.formats.add(it.payloadType.toString()) }
 
                 // Don't add a header extension if not present in the offer.
                 answerRtpParameters.headerExtensions.forEach { ext ->
-                    offerMediaDescription.getAttributes(ExtMapAttribute::class).firstOrNull { it.uri == ext.uri } ?: return@forEach
+                    offerMediaDescription.getAttributes<ExtMapAttribute>().firstOrNull { it.uri == ext.uri } ?: return@forEach
 
                     mediaDescription.addAttribute(ExtMapAttribute.of(
                         uri = ext.uri,
@@ -131,19 +130,19 @@ class AnswerMediaSection(
                 }
 
                 // Allow both 1 byte and 2 bytes length header extensions.
-                if (offerMediaDescription.hasAttribute(ExtmapAllowMixedAttribute::class)) {
+                if (offerMediaDescription.hasAttribute<ExtmapAllowMixedAttribute>()) {
                     mediaDescription.addAttribute(ExtmapAllowMixedAttribute.of())
                 }
 
                 // Simulcast.
-                val rids = mediaDescription.getAttributes(RidAttribute::class).toList()
-                offerMediaDescription.getAttribute(SimulcastAttribute::class)?.also { simulcast ->
+                val rids = mediaDescription.getAttributes<RidAttribute>().toList()
+                offerMediaDescription.getAttribute<SimulcastAttribute>()?.also { simulcast ->
                     mediaDescription.addAttribute(SimulcastAttribute.of(
-                        dir1 = "recv",
-                        list1 = simulcast.list1
+                        dir1 = StreamDirection.RECV,
+                        list1 = simulcast.list1,
                     ))
-                    rids.filter { it.direction == "send" }.forEach {
-                        mediaDescription.addAttribute(RidAttribute.of(it.id, "recv"))
+                    rids.filter { it.direction == StreamDirection.SEND }.forEach {
+                        mediaDescription.addAttribute(RidAttribute.of(it.id, StreamDirection.RECV))
                     }
                 }
 
@@ -195,7 +194,7 @@ class OfferMediaSection(
 ) : MediaSection(iceParameters, iceCandidates) {
     init {
         mediaDescription.mid = mid
-        mediaDescription.type = kind.toLowerCase(Locale.ENGLISH)
+        mediaDescription.type = kind.lowercase(Locale.ENGLISH)
 
         if (sctpParameters == null) {
             mediaDescription.setProto("UDP/TLS/RTP/SAVPF")
@@ -237,7 +236,7 @@ class OfferMediaSection(
                         ))
                     }
 
-                    mediaDescription.formats.add(payloadType)
+                    mediaDescription.formats.add(payloadType.toString())
                 }
 
                 offerRtpParameters.headerExtensions.forEach { ext ->
@@ -287,7 +286,7 @@ class OfferMediaSection(
 }
 
 internal fun RtpCodecParameters.getCodecName(): String {
-    return when (mimeType.substring(0, 6).toLowerCase(Locale.ENGLISH)) {
+    return when (mimeType.substring(0, 6).lowercase(Locale.ENGLISH)) {
         "audio/", "video/" -> mimeType.substring(6)
         else -> mimeType
     }

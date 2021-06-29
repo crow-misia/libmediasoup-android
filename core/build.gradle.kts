@@ -1,13 +1,14 @@
-import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.LibraryExtension
-import com.jfrog.bintray.gradle.BintrayExtension
+import com.android.build.gradle.*
+import org.jetbrains.dokka.gradle.DokkaTask
+import java.net.URI
 
 plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
-    `maven-publish`
-    id("com.jfrog.bintray") version Versions.bintrayPlugin
+    id("org.jetbrains.dokka")
+    id("maven-publish")
+    id("signing")
 }
 
 group = Maven.groupId
@@ -50,8 +51,6 @@ android {
         }
     }
 
-    ndkVersion = Versions.ndk
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -61,6 +60,8 @@ android {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
             jvmTarget = "1.8"
+            apiVersion = "1.5"
+            languageVersion = "1.5"
         }
     }
 }
@@ -89,91 +90,96 @@ val sourcesJar by tasks.creating(Jar::class) {
     from(sourceSets.create("main").allSource)
 }
 
-val publicationName = "core"
-publishing {
-    publications {
-        create<MavenPublication>(publicationName) {
-            groupId = Maven.groupId
-            artifactId = Maven.artifactId
-            version = Versions.core
+val customDokkaTask by tasks.creating(DokkaTask::class) {
+    dokkaSourceSets.getByName("main") {
+        noAndroidSdkLink.set(false)
+    }
+    dependencies {
+        plugins(Deps.dokkaJavadocPlugin)
+    }
+    inputs.dir("src/main/java")
+    outputDirectory.set(buildDir.resolve("javadoc"))
+}
 
-            val releaseAar = "$buildDir/outputs/aar/${project.name}-release.aar"
+val javadocJar by tasks.creating(Jar::class) {
+    dependsOn(customDokkaTask)
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Assembles JavaDoc JAR"
+    archiveClassifier.set("javadoc")
+    from(customDokkaTask.outputDirectory)
+}
 
-            println("""
-                    |Creating maven publication '$publicationName'
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["release"])
+
+                groupId = Maven.groupId
+                artifactId = Maven.artifactId
+                version = Versions.core
+
+                println("""
+                    |Creating maven publication
                     |    Group: $groupId
                     |    Artifact: $artifactId
                     |    Version: $version
-                    |    Aar: $releaseAar
                 """.trimMargin())
 
-            artifact(releaseAar)
-            artifact(sourcesJar)
+                artifact(sourcesJar)
+                artifact(javadocJar)
 
-            pom {
-                name.set(Maven.name)
-                description.set(Maven.desc)
-                url.set(Maven.siteUrl)
+                pom {
+                    name.set(Maven.name)
+                    description.set(Maven.desc)
+                    url.set(Maven.siteUrl)
 
-                scm {
-                    val scmUrl = "scm:git:${Maven.gitUrl}"
-                    connection.set(scmUrl)
-                    developerConnection.set(scmUrl)
-                    url.set(this@pom.url)
-                    tag.set("HEAD")
-                }
-
-                developers {
-                    developer {
-                        id.set("crow-misia")
-                        name.set("Zenichi Amano")
-                        email.set("crow.misia@gmail.com")
-                        roles.set(listOf("Project-Administrator", "Developer"))
-                        timezone.set("+9")
+                    scm {
+                        val scmUrl = "scm:git:${Maven.gitUrl}"
+                        connection.set(scmUrl)
+                        developerConnection.set(scmUrl)
+                        url.set(this@pom.url)
+                        tag.set("HEAD")
                     }
-                }
 
-                licenses {
-                    license {
-                        name.set(Maven.licenseName)
-                        url.set(Maven.licenseUrl)
-                        distribution.set(Maven.licenseDist)
+                    developers {
+                        developer {
+                            id.set("crow-misia")
+                            name.set("Zenichi Amano")
+                            email.set("crow.misia@gmail.com")
+                            roles.set(listOf("Project-Administrator", "Developer"))
+                            timezone.set("+9")
+                        }
                     }
-                }
 
-                withXml {
-                    asNode().appendNode("dependencies").let {
-                        for (dependency in configurations["api"].dependencies) {
-                            it.appendNode("dependency").apply {
-                                appendNode("groupId", dependency.group)
-                                appendNode("artifactId", dependency.name)
-                                appendNode("version", dependency.version)
-                            }
+                    licenses {
+                        license {
+                            name.set(Maven.licenseName)
+                            url.set(Maven.licenseUrl)
+                            distribution.set(Maven.licenseDist)
                         }
                     }
                 }
             }
         }
+        repositories {
+            maven {
+                val releasesRepoUrl = URI("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+                val snapshotsRepoUrl = URI("https://oss.sonatype.org/content/repositories/snapshots")
+                url = if (Versions.core.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+                val sonatypeUsername: String? by project
+                val sonatypePassword: String? by project
+                credentials {
+                    username = sonatypeUsername.orEmpty()
+                    password = sonatypePassword.orEmpty()
+                }
+            }
+        }
     }
-}
 
-fun findProperty(s: String) = project.findProperty(s) as String?
-bintray {
-    user = findProperty("bintray_user")
-    key = findProperty("bintray_apikey")
-    publish = true
-    setPublications(publicationName)
-    pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-        repo = "maven"
-        name = Maven.name
-        desc = Maven.desc
-        setLicenses(*Maven.licenses)
-        setLabels(*Maven.labels)
-        issueTrackerUrl = Maven.issueTrackerUrl
-        vcsUrl = Maven.gitUrl
-        githubRepo = Maven.githubRepo
-        description = Maven.desc
-    })
+    signing {
+        sign(publishing.publications.getByName("maven"))
+    }
 }
 
 tasks {

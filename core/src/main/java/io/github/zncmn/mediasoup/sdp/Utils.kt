@@ -1,10 +1,9 @@
 package io.github.zncmn.mediasoup.sdp
 
+import io.github.crow_misia.sdp.*
 import io.github.zncmn.mediasoup.MediasoupException
 import io.github.zncmn.mediasoup.model.*
-import io.github.zncmn.sdp.SdpMediaDescription
-import io.github.zncmn.sdp.SdpSessionDescription
-import io.github.zncmn.sdp.attribute.*
+import io.github.crow_misia.sdp.attribute.*
 import java.util.*
 
 internal fun SdpSessionDescription.extractRtpCapabilities(): RtpCapabilities {
@@ -31,7 +30,7 @@ internal fun SdpSessionDescription.extractRtpCapabilities(): RtpCapabilities {
         }
 
         // Get codecs
-        m.getAttributes(RTPMapAttribute::class).forEach { rtp ->
+        m.getAttributes<RTPMapAttribute>().forEach { rtp ->
             val mimeType = "$kind/${rtp.encodingName}"
 
             val codec = RtpCodecCapability(
@@ -49,7 +48,7 @@ internal fun SdpSessionDescription.extractRtpCapabilities(): RtpCapabilities {
         }
 
         // Get codec parameters
-        m.getAttributes(FormatAttribute::class).forEach { fmtp ->
+        m.getAttributes<FormatAttribute>().forEach { fmtp ->
             val parameters = fmtp.parameters
             codecsMap[fmtp.format]?.also { codec ->
                 codec.parameters = parameters.mapValues { entry -> entry.value }
@@ -67,10 +66,10 @@ internal fun SdpSessionDescription.extractRtpCapabilities(): RtpCapabilities {
 
 
         // Get RTP header extensions
-        m.getAttributes(ExtMapAttribute::class).forEach { ext ->
+        m.getAttributes<ExtMapAttribute>().forEach { ext ->
             headerExtensions.add(RtpHeaderExtension(
                 kind = kind,
-                uri = ext.uri.orEmpty(),
+                uri = ext.uri,
                 preferredId = ext.id
             ))
         }
@@ -84,15 +83,13 @@ internal fun SdpSessionDescription.extractRtpCapabilities(): RtpCapabilities {
 
 
 internal fun SdpSessionDescription.extractDtlsParameters(): DtlsParameters {
-    val media = getMediaDescriptions().find { it.hasAttribute(IceUfragAttribute::class) && it.port != 0}
+    val media = getMediaDescriptions().find { it.hasAttribute<IceUfragAttribute>() && it.port != 0}
     checkNotNull(media) { "mediaDescription(contain ice-ufrag and port=0) not found" }
 
-    val fingerprint = media.getAttribute(FingerprintAttribute::class) ?: run {
-        getAttribute(FingerprintAttribute::class)
-    }
+    val fingerprint = media.getAttribute() ?: getAttribute<FingerprintAttribute>()
     checkNotNull(fingerprint) { "fingerprint not found" }
 
-    val role = media.getAttribute(SetupAttribute::class)?.let { setup ->
+    val role = media.getAttribute<SetupAttribute>()?.let { setup ->
         when (setup) {
             SetupAttribute.of(SetupAttribute.Type.ACTIVE) -> DtlsRole.CLIENT
             SetupAttribute.of(SetupAttribute.Type.PASSIVE) -> DtlsRole.SERVER
@@ -116,14 +113,14 @@ internal fun SdpSessionDescription.extractDtlsParameters(): DtlsParameters {
 internal fun RtpParameters.applyCodecParameters(answerMediaDescription: SdpMediaDescription) {
     codecs.asSequence().filter { codec ->
         // Avoid parsing codec parameters for unhandled codecs.
-        val mimeType = codec.mimeType.toLowerCase(Locale.ENGLISH)
+        val mimeType = codec.mimeType.lowercase(Locale.ENGLISH)
         "audio/opus" == mimeType
     }.forEach { codec ->
         val payloadType = codec.payloadType
-        answerMediaDescription.getAttributes(RTPMapAttribute::class)
+        answerMediaDescription.getAttributes<RTPMapAttribute>()
             .find { it.payloadType == payloadType } ?: return@forEach
 
-        val formatAttribute = answerMediaDescription.getAttributes(FormatAttribute::class)
+        val formatAttribute = answerMediaDescription.getAttributes<FormatAttribute>()
             .find { it.format == payloadType } ?: run {
             FormatAttribute.of(payloadType).also {
                 answerMediaDescription.addAttribute(it)
@@ -144,29 +141,29 @@ internal fun SdpMediaDescription.isClosed() = port == 0
 
 internal fun SdpMediaDescription.disable() {
     setAttribute(InactiveAttribute, DirectionAttribute::class)
-    removeAttribute(ExtMapAttribute::class)
-    removeAttribute(SsrcAttribute::class)
-    removeAttribute(SsrcGroupAttribute::class)
-    removeAttribute(SimulcastAttribute::class)
-    removeAttribute(RidAttribute::class)
+    removeAttribute<ExtMapAttribute>()
+    removeAttribute<SsrcAttribute>()
+    removeAttribute<SsrcGroupAttribute>()
+    removeAttribute<SimulcastAttribute>()
+    removeAttribute<RidAttribute>()
 }
 
 internal fun SdpMediaDescription.close() {
     disable()
     port = 0
-    removeAttribute(ExtmapAllowMixedAttribute::class)
+    removeAttribute<ExtmapAllowMixedAttribute>()
 }
 
 internal fun SdpMediaDescription.getCname(): String? {
-    return getAttribute(CNameAttribute::class)?.value
+    return getAttribute<CNameAttribute>()?.value
 }
 
 internal fun SdpMediaDescription.getRtpEncodings(): List<RtpEncodingParameters> {
-    val ssrcs = getAttributes(SsrcAttribute::class).map { it.id }.toHashSet()
+    val ssrcs = getAttributes<SsrcAttribute>().map { it.id }.toHashSet()
     check(ssrcs.isNotEmpty()) { "no a=ssrc line found" }
 
     val ssrcToRtxSsrc = linkedMapOf<Long, Long>()
-    getAttributes(SsrcGroupAttribute::class).filter { it.semantics == "FID" }.forEach {
+    getAttributes<SsrcGroupAttribute>().filter { it.semantics == "FID" }.forEach {
         val (ssrc, rtxSsrc) = it.ssrcs.toLongArray()
         if (ssrcs.contains(ssrc)) {
             ssrcs.remove(ssrc)

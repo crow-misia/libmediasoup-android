@@ -31,8 +31,10 @@ internal fun generateH264Profile(profileLevelId: String,
 /**
  * cf. https://tools.ietf.org/html/rfc6184#section-8.2.2.
  */
-internal fun generateProfileLevelIdForAnswer(local: Map<String, String>,
-                                             remote: Map<String, String>,
-                                             answer: MutableMap<String, String>): Boolean {
+internal fun generateProfileLevelIdForAnswer(
+    local: Map<String, String>,
+    remote: Map<String, String>,
+    answer: MutableMap<String, String>,
+): Boolean {
     return true
 }

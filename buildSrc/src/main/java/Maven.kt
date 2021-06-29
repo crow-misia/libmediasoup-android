@@ -1,5 +1,5 @@
 object Maven {
-    const val groupId = "io.github.zncmn.mediasoup"
+    const val groupId = "io.github.crow-misia.libmediasoup-android"
     const val artifactId = "libmediasoup-android"
     const val name = "libmediasoup-android"
     const val desc = "mediasoup client side library for Android"

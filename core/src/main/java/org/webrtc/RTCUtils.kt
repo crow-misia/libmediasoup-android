@@ -13,6 +13,7 @@ fun RtpEncodingParameters.toRtpParametersEncoding(): RtpParameters.Encoding {
         maxFramerate,
         numTemporalLayers,
         scaleResolutionDownBy,
-        ssrc
+        ssrc,
+        false,
     )
 }

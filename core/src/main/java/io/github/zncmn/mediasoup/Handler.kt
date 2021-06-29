@@ -7,17 +7,17 @@ import io.github.zncmn.mediasoup.sdp.*
 import io.github.zncmn.mediasoup.sdp.applyCodecParameters
 import io.github.zncmn.mediasoup.sdp.extractDtlsParameters
 import io.github.zncmn.mediasoup.sdp.extractRtpCapabilities
-import io.github.zncmn.sdp.SdpMediaDescription
-import io.github.zncmn.sdp.SdpSessionDescription
-import io.github.zncmn.sdp.attribute.CNameAttribute
-import io.github.zncmn.sdp.attribute.SsrcAttribute
-import io.github.zncmn.sdp.attribute.SsrcGroupAttribute
-import io.github.zncmn.webrtc.createAnswer
-import io.github.zncmn.webrtc.createOffer
-import io.github.zncmn.webrtc.log.WebRtcLogger
-import io.github.zncmn.webrtc.observer.PeerConnectionDefaultObserver
-import io.github.zncmn.webrtc.setLocalDescription
-import io.github.zncmn.webrtc.setRemoteDescription
+import io.github.crow_misia.sdp.SdpMediaDescription
+import io.github.crow_misia.sdp.SdpSessionDescription
+import io.github.crow_misia.sdp.attribute.CNameAttribute
+import io.github.crow_misia.sdp.attribute.SsrcAttribute
+import io.github.crow_misia.sdp.attribute.SsrcGroupAttribute
+import io.github.crow_misia.webrtc.createAnswer
+import io.github.crow_misia.webrtc.createOffer
+import io.github.crow_misia.webrtc.log.WebRtcLogger
+import io.github.crow_misia.webrtc.observer.PeerConnectionDefaultObserver
+import io.github.crow_misia.webrtc.setLocalDescription
+import io.github.crow_misia.webrtc.setRemoteDescription
 import kotlinx.coroutines.runBlocking
 import org.webrtc.*
 import java.util.*
@@ -227,7 +227,7 @@ internal class SendHandler(
         }
 
         // If VP8 and there is effective simulcast, add scalabilityMode to each encoding.
-        val mimeType = sendingRtpParameters.codecs[0].mimeType.toLowerCase(Locale.ENGLISH)
+        val mimeType = sendingRtpParameters.codecs[0].mimeType.lowercase(Locale.ENGLISH)
         if (sendingRtpParameters.encodings.size > 1 && (mimeType == "video/vp8" || mimeType == "video/h264")) {
             sendingRtpParameters.encodings.forEach { it.scalabilityMode = "S1T3" }
         }

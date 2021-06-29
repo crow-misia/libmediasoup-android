@@ -732,7 +732,7 @@ private fun RtpCodecCapability.matchCodec(target: RtpCodecCapability, strict: Bo
         return false
     }
 
-    when (aMimeType.toLowerCase(Locale.ENGLISH)) {
+    when (aMimeType.lowercase(Locale.ENGLISH)) {
         // Match H264 parameters.
         "video/h264" -> {
             val aPacketizationMode = getH264PacketizationMode()

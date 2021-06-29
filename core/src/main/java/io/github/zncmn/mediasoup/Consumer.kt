@@ -2,7 +2,7 @@ package io.github.zncmn.mediasoup
 
 import io.github.zncmn.mediasoup.model.MediaKind
 import io.github.zncmn.mediasoup.model.RtpParameters
-import io.github.zncmn.webrtc.log.WebRtcLogger
+import io.github.crow_misia.webrtc.log.WebRtcLogger
 import org.webrtc.MediaStreamTrack
 import org.webrtc.RTCStatsReport
 import org.webrtc.RtpReceiver

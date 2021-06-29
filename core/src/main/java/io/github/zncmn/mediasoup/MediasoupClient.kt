@@ -1,14 +1,23 @@
 package io.github.zncmn.mediasoup
 
 import android.app.Application
-import io.github.zncmn.webrtc.initializePeerConnectionFactory
-import io.github.zncmn.webrtc.log.LogHandler
-import io.github.zncmn.webrtc.log.WebRtcLogger
+import io.github.crow_misia.webrtc.initializePeerConnectionFactory
+import io.github.crow_misia.webrtc.log.LogHandler
+import io.github.crow_misia.webrtc.log.WebRtcLogger
+import org.webrtc.Logging
 
 object MediasoupClient {
-    fun initialize(application: Application, logHandler: LogHandler) {
+    @JvmStatic
+    @JvmOverloads
+    fun initialize(
+        context: Application,
+        logHandler: LogHandler,
+        loggableSeverity: Logging.Severity = Logging.Severity.LS_NONE,
+    ) {
         WebRtcLogger.setHandler(logHandler)
 
-        application.initializePeerConnectionFactory()
+        context.initializePeerConnectionFactory(
+            loggableSeverity = loggableSeverity,
+        )
     }
 }
