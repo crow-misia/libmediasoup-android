@@ -10,7 +10,7 @@ using namespace webrtc;
 namespace mediasoupclient
 {
 
-#define WITH_PACKAGE_NAME(className) "io/github/zncmn/mediasoup/" #className
+#define WITH_PACKAGE_NAME(className) "io/github/crow_misia/mediasoup/" #className
 #define CLASS_NAME_FOR_PARAMETER(className) "L" WITH_PACKAGE_NAME(className) ";"
 
 void init(JNIEnv *env);

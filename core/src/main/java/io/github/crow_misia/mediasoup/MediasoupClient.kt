@@ -1,4 +1,4 @@
-package io.github.zncmn.mediasoup
+package io.github.crow_misia.mediasoup
 
 import android.app.Application
 import io.github.crow_misia.webrtc.initializePeerConnectionFactory
