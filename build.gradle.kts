@@ -6,10 +6,11 @@ plugins {
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath(Deps.androidPlugin)
+        classpath(Deps.dokkaPlugin)
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle.kts files
@@ -19,8 +20,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
-        maven(url = "https://jitpack.io")
+        mavenCentral()
     }
 }
 

@@ -40,7 +40,7 @@ class SendTransport @CalledByNative private constructor(
     fun produce(
         listener: Producer.Listener,
         track: MediaStreamTrack,
-        encodings: Array<RtpParameters.Encoding>,
+        encodings: List<RtpParameters.Encoding>,
         codecOptions: String? = null,
         appData: String? = null
     ): Producer {
@@ -50,7 +50,7 @@ class SendTransport @CalledByNative private constructor(
             transport = nativeTransport,
             listener = listener,
             track = nativeTrack,
-            encodings = encodings,
+            encodings = encodings.toTypedArray(),
             codecOptions = codecOptions,
             appData = appData
         )
