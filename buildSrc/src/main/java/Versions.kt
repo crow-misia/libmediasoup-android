@@ -10,7 +10,7 @@ object Versions {
     const val compileSdk = 30
     const val minSdk = 21
 
-    const val core = "0.2.0"
+    const val core = "0.3.0"
 
     const val webrtcKtx = "1.0.0"
 

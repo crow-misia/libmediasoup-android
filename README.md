@@ -12,19 +12,19 @@ mediasoup android client side library https://mediasoup.org
 
 Add dependencies (you can also add other modules that you need):
 
-`${latest.version}` is [![Download](https://api.bintray.com/packages/zncmn/maven/libmediasoup-android/images/download.svg)](https://bintray.com/zncmn/maven/libmediasoup-android/_latestVersion)
+`${latest.version}` is [![Maven Central](https://img.shields.io/maven-central/v/io.github.crow-misia.libmediasoup-android/libmediasoup-android.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.crow-misia.libmediasoup-android%22%20AND%20a:%22libmediasoup-android%22)
 
 ```groovy
 dependencies {
-    implementation "io.github.zncmn.mediasoup:libmediasoup-android:${latest.version}"
+    implementation "io.github.crow-misia.libmediasoup-android:libmediasoup-android:${latest.version}"
 }
 ```
 
-Make sure that you have either `jcenter()` in the list of repositories:
+Make sure that you have either `mavenCentral()` in the list of repositories:
 
 ```
 repository {
-    jcenter()
+    mavenCentral()
 }
 ```
 
