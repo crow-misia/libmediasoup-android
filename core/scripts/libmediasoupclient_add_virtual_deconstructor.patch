@@ -8,8 +8,8 @@
  		const std::string& GetId() const;
  		bool IsClosed() const;
  		const std::string& GetConnectionState() const;
---- libmediasoupclient.bk/include/Logger.hpp	2020-07-14 03:44:00.000000000 +0900
-+++ libmediasoupclient/include/Logger.hpp	2020-08-12 22:19:57.000000000 +0900
+--- a/include/Logger.hpp	2020-07-14 03:44:00.000000000 +0900
++++ b/include/Logger.hpp	2020-08-12 22:19:57.000000000 +0900
 @@ -64,6 +64,7 @@ namespace mediasoupclient
  		class LogHandlerInterface
  		{

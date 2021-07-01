@@ -79,6 +79,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 	android
 	log
 	OpenSLES
+	GLESv2
+	EGL
 	mediasoupclient
 )
 

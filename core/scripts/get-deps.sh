@@ -67,6 +67,7 @@ popd
 pushd $CURDIR/deps/libmediasoupclient
   patch -u -p1 < $CURDIR/scripts/libmediasoupclient_add_virtual_deconstructor.patch
   patch -u -p1 < $CURDIR/scripts/libmediasoupclient_whole_archive.patch
+  patch -u -p1 < $CURDIR/scripts/libmediasoupclient_webrtc_m92.patch
 popd
 
 # JSON for Modern C++
