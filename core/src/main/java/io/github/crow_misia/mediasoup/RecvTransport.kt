@@ -2,9 +2,15 @@ package io.github.crow_misia.mediasoup
 
 import org.webrtc.CalledByNative
 
+/**
+ * RecvTransport.
+ */
 class RecvTransport @CalledByNative private constructor(
-    override var nativeTransport: Long
+    override var nativeTransport: Long,
 ) : Transport() {
+    /**
+     * RecvTransport Listener.
+     */
     interface Listener : Transport.Listener
 
     /**
@@ -17,7 +23,7 @@ class RecvTransport @CalledByNative private constructor(
         producerId: String,
         kind: String,
         rtpParameters: String? = null,
-        appData: String? = null
+        appData: String? = null,
     ): Consumer {
         checkTransportExists()
         return nativeConsume(
@@ -41,7 +47,7 @@ class RecvTransport @CalledByNative private constructor(
         producerId: String,
         label: String,
         protocol: String = "",
-        appData: String? = null
+        appData: String? = null,
     ): DataConsumer {
         checkTransportExists()
         return nativeConsumeData(
@@ -66,7 +72,7 @@ class RecvTransport @CalledByNative private constructor(
         producerId: String,
         kind: String,
         rtpParameters: String?,
-        appData: String?
+        appData: String?,
     ): Consumer
 
     private external fun nativeConsumeData(
@@ -76,6 +82,6 @@ class RecvTransport @CalledByNative private constructor(
         producerId: String,
         label: String,
         protocol: String,
-        appData: String?
+        appData: String?,
     ): DataConsumer
 }

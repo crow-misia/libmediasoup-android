@@ -5,23 +5,29 @@ import org.webrtc.MediaStreamTrack
 import org.webrtc.RTCUtils
 import org.webrtc.RtpParameters
 
+/**
+ * SendTransport.
+ */
 class SendTransport @CalledByNative private constructor(
-    override var nativeTransport: Long
+    override var nativeTransport: Long,
 ) : Transport() {
+    /**
+     * SendTransport Listener.
+     */
     interface Listener : Transport.Listener {
         /**
-         * @return producer Id
+         * @return Producer ID
          */
         @CalledByNative("Listener")
         fun onProduce(
             transport: Transport,
             kind: String,
             rtpParameters: String,
-            appData: String?
+            appData: String?,
         ): String
 
         /**
-         * @return producer Id
+         * @return Producer ID
          */
         @CalledByNative("Listener")
         fun onProduceData(
@@ -29,7 +35,7 @@ class SendTransport @CalledByNative private constructor(
             sctpStreamParameters: String,
             label: String,
             protocol: String,
-            appData: String?
+            appData: String?,
         ): String
     }
 
@@ -40,9 +46,9 @@ class SendTransport @CalledByNative private constructor(
     fun produce(
         listener: Producer.Listener,
         track: MediaStreamTrack,
-        encodings: List<RtpParameters.Encoding>,
+        encodings: List<RtpParameters.Encoding> = emptyList(),
         codecOptions: String? = null,
-        appData: String? = null
+        appData: String? = null,
     ): Producer {
         checkTransportExists()
         val nativeTrack: Long = RTCUtils.getNativeMediaStreamTrack(track)
@@ -52,7 +58,7 @@ class SendTransport @CalledByNative private constructor(
             track = nativeTrack,
             encodings = encodings.toTypedArray(),
             codecOptions = codecOptions,
-            appData = appData
+            appData = appData,
         )
     }
 
@@ -67,7 +73,7 @@ class SendTransport @CalledByNative private constructor(
         ordered: Boolean = true,
         maxRetransmits: Int = 0,
         maxPacketLifeTime: Int = 0,
-        appData: String? = null
+        appData: String? = null,
     ): DataProducer {
         checkTransportExists()
         return nativeProduceData(
@@ -78,7 +84,7 @@ class SendTransport @CalledByNative private constructor(
             ordered = ordered,
             maxRetransmits = maxRetransmits,
             maxPacketLifeTime = maxPacketLifeTime,
-            appData = appData
+            appData = appData,
         )
     }
 
@@ -92,7 +98,7 @@ class SendTransport @CalledByNative private constructor(
         track: Long,
         encodings: Array<RtpParameters.Encoding>,
         codecOptions: String?,
-        appData: String?
+        appData: String?,
     ): Producer
 
     private external fun nativeProduceData(
@@ -103,6 +109,6 @@ class SendTransport @CalledByNative private constructor(
         ordered: Boolean,
         maxRetransmits: Int,
         maxPacketLifeTime: Int,
-        appData: String?
+        appData: String?,
     ): DataProducer
 }

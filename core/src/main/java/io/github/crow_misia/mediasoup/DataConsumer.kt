@@ -3,8 +3,11 @@ package io.github.crow_misia.mediasoup
 import org.webrtc.CalledByNative
 import org.webrtc.DataChannel
 
+/**
+ * DataConsumer.
+ */
 class DataConsumer @CalledByNative private constructor(
-    private var nativeDataConsumer: Long
+    private var nativeDataConsumer: Long,
 ) {
     interface Listener {
         @CalledByNative("Listener")
@@ -26,58 +29,92 @@ class DataConsumer @CalledByNative private constructor(
         fun onTransportClose(dataConsumer: DataConsumer)
     }
 
+    /**
+     * DataConsumer ID.
+     */
     val id: String by lazy {
-        checkConsumerExists()
+        checkDataConsumerExists()
         nativeGetId(nativeDataConsumer)
     }
 
+    /**
+     * Local ID.
+     */
     val localId: String by lazy {
-        checkConsumerExists()
+        checkDataConsumerExists()
         nativeGetLocalId(nativeDataConsumer)
     }
 
+    /**
+     * Associated DataProducer ID.
+     */
     val dataProducerId: String by lazy {
-        checkConsumerExists()
+        checkDataConsumerExists()
         nativeGetDataProducerId(nativeDataConsumer)
     }
 
+    /**
+     * Whether the DataConsumer is closed.
+     */
     val closed: Boolean
         get() {
-            checkConsumerExists()
+            checkDataConsumerExists()
             return nativeIsClosed(nativeDataConsumer)
         }
 
+    /**
+     * SCTP stream parameters.
+     */
     val sctpStreamParameters: String by lazy {
-        checkConsumerExists()
+        checkDataConsumerExists()
         nativeGetSctpStreamParameters(nativeDataConsumer)
     }
 
-    val readyState: DataChannel.State? by lazy {
-        checkConsumerExists()
-        val state = nativeGetReadyState(nativeDataConsumer)
-        DataChannel.State.values()[state]
-    }
+    /**
+     * DataChannel readyState.
+     */
+    val readyState: DataChannel.State
+        get() {
+            checkDataConsumerExists()
+            val state = nativeGetReadyState(nativeDataConsumer)
+            return DataChannel.State.values()[state]
+        }
 
+    /**
+     * DataChannel label.
+     */
     val label: String by lazy {
-        checkConsumerExists()
+        checkDataConsumerExists()
         nativeGetLabel(nativeDataConsumer)
     }
 
+    /**
+     * DataChannel protocol.
+     */
     val protocol: String by lazy {
-        checkConsumerExists()
+        checkDataConsumerExists()
         nativeGetProtocol(nativeDataConsumer)
     }
 
+    /**
+     * App custom data.
+     */
     val appData: String by lazy {
-        checkConsumerExists()
+        checkDataConsumerExists()
         nativeGetAppData(nativeDataConsumer)
     }
 
+    /**
+     * Closes the DataConsumer.
+     */
     fun close() {
-        checkConsumerExists()
+        checkDataConsumerExists()
         nativeClose(nativeDataConsumer)
     }
 
+    /**
+     * Dispose the Consumer.
+     */
     fun dispose() {
         val ptr = nativeDataConsumer
         if (ptr == 0L) {
@@ -87,7 +124,7 @@ class DataConsumer @CalledByNative private constructor(
         nativeDispose(ptr)
     }
 
-    private fun checkConsumerExists() {
+    private fun checkDataConsumerExists() {
         check(nativeDataConsumer != 0L) { "DataConsumer has been disposed." }
     }
 

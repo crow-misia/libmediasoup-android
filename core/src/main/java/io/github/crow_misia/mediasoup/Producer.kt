@@ -6,7 +6,7 @@ import org.webrtc.RTCUtils
 import org.webrtc.RtpSender
 
 class Producer @CalledByNative internal constructor(
-    private var nativeProducer: Long
+    private var nativeProducer: Long,
 ) {
     interface Listener {
         @CalledByNative("Listener")
@@ -15,72 +15,105 @@ class Producer @CalledByNative internal constructor(
 
     private var cachedTrack: MediaStreamTrack?
 
+    /**
+     * Producer ID.
+     */
     val id: String by lazy {
-        checkDeviceExists()
+        checkProducerExists()
         nativeGetId(nativeProducer)
     }
 
+    /**
+     * Local ID.
+     */
     val localId: String by lazy {
-        checkDeviceExists()
+        checkProducerExists()
         nativeGetLocalId(nativeProducer)
     }
 
+    /**
+     * Whether the Producer is closed.
+     */
     val closed: Boolean
         get() {
-            checkDeviceExists()
+            checkProducerExists()
             return nativeIsClosed(nativeProducer)
         }
 
+    /**
+     *  Whether the Producer is paused.
+     */
     val paused: Boolean
         get() {
-            checkDeviceExists()
+            checkProducerExists()
             return nativeIsPaused(nativeProducer)
         }
 
+    /**
+     * Media kind.
+     */
     val kind: String by lazy {
-        checkDeviceExists()
+        checkProducerExists()
         nativeGetKind(nativeProducer)
     }
 
+    /**
+     * Associated RtpSender.
+     */
     val rtpSender: RtpSender by lazy {
-        checkDeviceExists()
+        checkProducerExists()
         val nativeRtpSender = nativeGetRtpSender(nativeProducer)
         RtpSender(nativeRtpSender)
     }
 
+    /**
+     * The associated track.
+     */
     var track: MediaStreamTrack?
         get() = cachedTrack
         set(value) {
-            checkDeviceExists()
+            checkProducerExists()
             cachedTrack = value?.also {
                 val nativeTrack = RTCUtils.getNativeMediaStreamTrack(it)
                 nativeReplaceTrack(nativeProducer, nativeTrack)
             }
         }
 
+    /**
+     * Max SpatialLayer.
+     */
     var maxSpatialLayer: Int
         get() {
-            checkDeviceExists()
+            checkProducerExists()
             return nativeGetMaxSpatialLayer(nativeProducer)
         }
         set(value) {
-            checkDeviceExists()
+            checkProducerExists()
             nativeSetMaxSpatialLayer(nativeProducer, value)
         }
 
+    /**
+     * RTP parameters.
+     */
     val rtpParameters: String by lazy {
-        checkDeviceExists()
+        checkProducerExists()
         nativeGetRtpParameters(nativeProducer)
     }
 
+    /**
+     * App custom data.
+     */
     val appData: String by lazy {
-        checkDeviceExists()
+        checkProducerExists()
         nativeGetAppData(nativeProducer)
     }
 
+    /**
+     * Get associated RTCRtpReceiver stats.
+     */
     val stats: String
         get() {
-            checkDeviceExists()
+            checkProducerExists()
             return nativeGetStats(nativeProducer)
         }
 
@@ -89,23 +122,35 @@ class Producer @CalledByNative internal constructor(
         cachedTrack = RTCUtils.createMediaStreamTrack(nativeTrack)
     }
 
+    /**
+     * Resumes sending media.
+     */
     fun resume() {
-        checkDeviceExists()
+        checkProducerExists()
         nativeResume(nativeProducer)
     }
 
+    /**
+     *  Pauses sending media.
+     */
     fun pause() {
-        checkDeviceExists()
+        checkProducerExists()
         nativePause(nativeProducer)
     }
 
+    /**
+     * Closes the Producer.
+     */
     fun close() {
-        checkDeviceExists()
+        checkProducerExists()
         cachedTrack?.dispose()
         cachedTrack = null
         nativeClose(nativeProducer)
     }
 
+    /**
+     * Dispose the Producer.
+     */
     fun dispose() {
         cachedTrack?.dispose()
         cachedTrack = null
@@ -118,7 +163,7 @@ class Producer @CalledByNative internal constructor(
         nativeDispose(ptr)
     }
 
-    private fun checkDeviceExists() {
+    private fun checkProducerExists() {
         check(nativeProducer != 0L) { "Producer has been disposed." }
     }
 

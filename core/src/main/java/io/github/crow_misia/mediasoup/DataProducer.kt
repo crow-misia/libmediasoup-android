@@ -3,8 +3,11 @@ package io.github.crow_misia.mediasoup
 import org.webrtc.CalledByNative
 import org.webrtc.DataChannel
 
+/**
+ * DataProducer.
+ */
 class DataProducer @CalledByNative private constructor(
-    private var nativeDataProducer: Long
+    private var nativeDataProducer: Long,
 ) {
     interface Listener {
         @CalledByNative("Listener")
@@ -20,60 +23,94 @@ class DataProducer @CalledByNative private constructor(
         fun onTransportClose(dataProducer: DataProducer)
     }
 
+    /**
+     * DataProducer ID.
+     */
     val id: String by lazy {
-        checkConsumerExists()
+        checkDataProducerExists()
         nativeGetId(nativeDataProducer)
     }
 
+    /**
+     * Local ID.
+     */
     val localId: String by lazy {
-        checkConsumerExists()
+        checkDataProducerExists()
         nativeGetLocalId(nativeDataProducer)
     }
 
+    /**
+     * Whether the DataProducer is closed.
+     */
     val closed: Boolean
         get() {
-            checkConsumerExists()
+            checkDataProducerExists()
             return nativeIsClosed(nativeDataProducer)
         }
 
+    /**
+     * SCTP stream parameters.
+     */
     val sctpStreamParameters: String? by lazy {
-        checkConsumerExists()
+        checkDataProducerExists()
         nativeGetSctpStreamParameters(nativeDataProducer)
     }
 
-    val readyState: DataChannel.State? by lazy {
-        checkConsumerExists()
-        val state = nativeGetReadyState(nativeDataProducer)
-        DataChannel.State.values()[state]
-    }
+    /**
+     * DataChannel readyState.
+     */
+    val readyState: DataChannel.State
+        get() {
+            checkDataProducerExists()
+            val state = nativeGetReadyState(nativeDataProducer)
+            return DataChannel.State.values()[state]
+        }
 
+    /**
+     * DataChannel label.
+     */
     val label: String by lazy {
-        checkConsumerExists()
+        checkDataProducerExists()
         nativeGetLabel(nativeDataProducer)
     }
 
+    /**
+     * DataChannel protocol.
+     */
     val protocol: String by lazy {
-        checkConsumerExists()
+        checkDataProducerExists()
         nativeGetProtocol(nativeDataProducer)
     }
 
+    /**
+     * App custom data.
+     */
     val appData: String by lazy {
-        checkConsumerExists()
+        checkDataProducerExists()
         nativeGetAppData(nativeDataProducer)
     }
 
+    /**
+     * Closes the DataConsumer.
+     */
     fun close() {
-        checkConsumerExists()
+        checkDataProducerExists()
         nativeClose(nativeDataProducer)
     }
 
+    /**
+     * Send data.
+     */
     fun send(buffer: DataChannel.Buffer) {
-        checkConsumerExists()
+        checkDataProducerExists()
         val data = ByteArray(buffer.data.remaining())
         buffer.data.get(data)
         return nativeSend(nativeDataProducer, data, buffer.binary)
     }
 
+    /**
+     * Dispose the Consumer.
+     */
     fun dispose() {
         val ptr = nativeDataProducer
         if (ptr == 0L) {
@@ -83,7 +120,7 @@ class DataProducer @CalledByNative private constructor(
         nativeDispose(ptr)
     }
 
-    private fun checkConsumerExists() {
+    private fun checkDataProducerExists() {
         check(nativeDataProducer != 0L) { "DataProducer has been disposed." }
     }
 

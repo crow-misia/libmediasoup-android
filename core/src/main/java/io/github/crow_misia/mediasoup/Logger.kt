@@ -4,8 +4,13 @@ import android.util.Log
 import io.github.crow_misia.webrtc.log.WebRtcLogger
 import org.webrtc.CalledByNative
 
-
+/**
+ * Logger.
+ */
 class Logger {
+    /**
+     * Log Level.
+     */
     enum class LogLevel(val priority: Int, val level: Int) {
         LOG_NONE(Log.ASSERT, 0),
         LOG_ERROR(Log.ERROR, 1),

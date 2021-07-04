@@ -3,8 +3,11 @@ package io.github.crow_misia.mediasoup
 import org.webrtc.PeerConnection
 import org.webrtc.PeerConnectionFactory
 
+/**
+ * Device.
+ */
 class Device(
-    private val peerConnectionFactory: PeerConnectionFactory
+    private val peerConnectionFactory: PeerConnectionFactory,
 ) {
     private var nativeDevice: Long = nativeNewDevice()
 
@@ -40,6 +43,9 @@ class Device(
         return nativeCanProduce(nativeDevice, kind)
     }
 
+    /**
+     * Create a new Transport.
+     */
     @JvmOverloads
     fun createSendTransport(
         listener: SendTransport.Listener,
@@ -49,10 +55,9 @@ class Device(
         dtlsParameters: String,
         sctpParameters: String? = null,
         rtcConfig: PeerConnection.RTCConfiguration,
-        appData: String? = null
+        appData: String? = null,
     ): SendTransport {
         checkDeviceExists()
-        // Create a new Transport.
         return nativeCreateSendTransport(
             nativeDevice = nativeDevice,
             listener = listener,
@@ -63,10 +68,13 @@ class Device(
             sctpParameters = sctpParameters,
             configuration = rtcConfig,
             peerConnectionFactory = peerConnectionFactory.nativePeerConnectionFactory,
-            appData = appData
+            appData = appData,
         )
     }
 
+    /**
+     * Create a new Transport.
+     */
     @JvmOverloads
     fun createRecvTransport(
         listener: RecvTransport.Listener,
@@ -76,10 +84,9 @@ class Device(
         dtlsParameters: String,
         sctpParameters: String? = null,
         rtcConfig: PeerConnection.RTCConfiguration,
-        appData: String? = null
+        appData: String? = null,
     ): RecvTransport {
         checkDeviceExists()
-        // Create a new Transport.
         return nativeCreateRecvTransport(
             nativeDevice = nativeDevice,
             listener = listener,
@@ -90,7 +97,7 @@ class Device(
             sctpParameters = sctpParameters,
             configuration = rtcConfig,
             peerConnectionFactory = peerConnectionFactory.nativePeerConnectionFactory,
-            appData = appData
+            appData = appData,
         )
     }
 
@@ -124,7 +131,7 @@ class Device(
         sctpParameters: String?,
         configuration: PeerConnection.RTCConfiguration,
         peerConnectionFactory: Long,
-        appData: String?
+        appData: String?,
     ): SendTransport
 
     private external fun nativeCreateRecvTransport(
@@ -137,6 +144,10 @@ class Device(
         sctpParameters: String?,
         configuration: PeerConnection.RTCConfiguration,
         peerConnectionFactory: Long,
-        appData: String?
+        appData: String?,
     ): RecvTransport
+}
+
+fun PeerConnectionFactory.createDevice(): Device {
+    return Device(this)
 }

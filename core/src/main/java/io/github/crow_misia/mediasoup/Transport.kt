@@ -3,7 +3,13 @@ package io.github.crow_misia.mediasoup
 import org.webrtc.CalledByNative
 import org.webrtc.PeerConnection
 
+/**
+ * Transport.
+ */
 abstract class Transport {
+    /**
+     * Transport Listener.
+     */
     interface Listener {
         @CalledByNative("Listener")
         fun onConnect(transport: Transport, dtlsParameters: String)
@@ -14,11 +20,17 @@ abstract class Transport {
 
     protected abstract var nativeTransport: Long
 
+    /**
+     * ID.
+     */
     val id: String by lazy {
         checkTransportExists()
         nativeGetId(nativeTransport)
     }
 
+    /**
+     * Transport (IceConnection) connection state.
+     */
     val connectionState: PeerConnection.IceConnectionState
         get() {
             checkTransportExists()
@@ -26,38 +38,59 @@ abstract class Transport {
             return PeerConnection.IceConnectionState.valueOf(state)
         }
 
+    /**
+     * App custom data.
+     */
     val appData: String by lazy {
         checkTransportExists()
         nativeGetAppData(nativeTransport)
     }
 
+    /**
+     * Transport stats.
+     */
     val stats: String
         get() {
             checkTransportExists()
             return nativeGetStats(nativeTransport)
         }
 
+    /**
+     * Whether the Transport is closed.
+     */
     val closed: Boolean
         get() {
             checkTransportExists()
             return nativeIsClosed(nativeTransport)
         }
 
+    /**
+     * Restart ICE.
+     */
     fun restartIce(iceParameters: String) {
         checkTransportExists()
         nativeRestartIce(nativeTransport, iceParameters)
     }
 
+    /**
+     * Update ICE Servers.
+     */
     fun updateIceServers(iceServers: List<String>) {
         checkTransportExists()
         nativeUpdateIceServers(nativeTransport, iceServers.joinToString(","))
     }
 
+    /**
+     * Closes the Transport.
+     */
     fun close() {
         checkTransportExists()
         nativeClose(nativeTransport)
     }
 
+    /**
+     * Dispose the Transport.
+     */
     fun dispose() {
         val transport = nativeTransport
         if (transport == 0L) {
