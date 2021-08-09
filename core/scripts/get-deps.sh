@@ -19,40 +19,6 @@ pushd $CURDIR/deps/webrtc
   rm -rf aar
   mv jar/*.jar lib/
   rm -rf jar
-  rm -rf include/base/ios
-  rm -rf include/base/mac
-  rm -rf include/base/test
-  rm -rf include/base/third_party
-  rm -rf include/base/win
-  rm -rf include/build
-  rm -rf include/buildtools
-  rm -rf include/call/test
-  rm -rf include/examples
-  rm -rf include/modules/audio_coding
-  rm -rf include/modules/audio_device/android
-  rm -rf include/modules/audio_device/dummy
-  rm -rf include/modules/audio_device/linux
-  rm -rf include/modules/audio_device/mac
-  rm -rf include/modules/audio_device/win
-  rm -rf include/modules/audio_mixer
-  rm -rf include/modules/congestion_controller
-  rm -rf include/modules/desktop_capture
-  rm -rf include/modules/pacing
-  rm -rf include/modules/remote_bitrate_estimator
-  rm -rf include/modules/third_party
-  rm -rf include/modules/utility
-  rm -rf include/modules/video_capture
-  rm -rf include/modules/video_processing
-  rm -rf include/rtc_base/test*
-  rm -rf include/rtc_tools
-  rm -rf include/sdk/android/native_unittests
-  rm -rf include/sdk/objc
-  rm -rf include/stats
-  rm -rf include/test
-  rm -rf include/testing
-  rm -rf include/tools
-  rm -rf include/third_party/a[c-z]*
-  rm -rf include/third_party/[b-z]*
 popd
 
 # libmediasoupclient
