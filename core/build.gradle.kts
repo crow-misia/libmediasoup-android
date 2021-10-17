@@ -14,7 +14,7 @@ object Maven {
     const val artifactId = "libmediasoup-android"
     const val name = "libmediasoup-android"
     const val desc = "mediasoup client side library for Android"
-    const val version = "0.6.0"
+    const val version = "0.7.0"
     const val siteUrl = "https://github.com/crow-misia/libmediasoup-android"
     const val gitUrl = "https://github.com/crow-misia/libmediasoup-android.git"
     const val githubRepo = "crow-misia/libmediasoup-android"
@@ -64,7 +64,7 @@ android {
     }
 
     buildTypes {
-        getByName("debug") {
+        debug {
             isJniDebuggable = true
             externalNativeBuild {
                 cmake {
@@ -75,7 +75,7 @@ android {
                 }
             }
         }
-        getByName("release") {
+        release {
             isJniDebuggable = false
             externalNativeBuild {
                 cmake {
@@ -89,14 +89,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility(JavaVersion.VERSION_11)
+        targetCompatibility(JavaVersion.VERSION_11)
     }
 
     kotlin {
         kotlinOptions {
             freeCompilerArgs = listOf("-module-name", "libmediasoup-android")
-            jvmTarget = "1.8"
+            jvmTarget = "11"
             apiVersion = "1.5"
             languageVersion = "1.5"
         }
@@ -104,10 +104,11 @@ android {
 
     externalNativeBuild {
         cmake {
+            version = "3.18.1"
             path = file("${projectDir}/CMakeLists.txt")
         }
     }
-    ndkVersion = "22.1.7171670"
+    ndkVersion = "23.0.7599858"
 }
 
 dependencies {
@@ -174,7 +175,7 @@ afterEvaluate {
                     url.set(Maven.siteUrl)
 
                     scm {
-                        val scmUrl = "scm:git:${Maven.gitUrl}"
+                        val scmUrl = "scm:git:_"
                         connection.set(scmUrl)
                         developerConnection.set(scmUrl)
                         url.set(Maven.gitUrl)

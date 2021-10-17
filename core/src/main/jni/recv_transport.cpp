@@ -50,7 +50,7 @@ extern "C"
       .value_or(nullptr);
   }
 
-  JNI_DEFINE_METHOD(jobject, RecvTransport, nativeConsumeData, jlong j_transport, jobject j_listener, jstring j_id, jstring j_producerId, jstring j_label, jstring j_protocol, jstring j_appData)
+  JNI_DEFINE_METHOD(jobject, RecvTransport, nativeConsumeData, jlong j_transport, jobject j_listener, jstring j_id, jstring j_producerId, jint j_stream_id, jstring j_label, jstring j_protocol, jstring j_appData)
   {
     MSC_TRACE();
 
@@ -59,6 +59,7 @@ extern "C"
                                auto listener = new DataConsumerListenerJni(env, JavaParamRef<jobject>(env, j_listener));
                                auto id = JavaToNativeString(env, JavaParamRef<jstring>(env, j_id));
                                auto producerId = JavaToNativeString(env, JavaParamRef<jstring>(env, j_producerId));
+                               auto streamId = static_cast<uint16_t>(j_stream_id);
                                auto label = JavaToNativeString(env, JavaParamRef<jstring>(env, j_label));
                                auto protocol = JavaToNativeString(env, JavaParamRef<jstring>(env, j_protocol));
                                auto appData = json::object();
@@ -67,7 +68,7 @@ extern "C"
                                  appData = json::parse(JavaToNativeString(env, JavaParamRef<jstring>(env, j_appData)));
                                }
 
-                               auto dataConsumer = getRecvTransport(j_transport)->ConsumeData(listener, id, producerId, label, protocol, appData);
+                               auto dataConsumer = getRecvTransport(j_transport)->ConsumeData(listener, id, producerId, streamId, label, protocol, appData);
                                return NativeToJavaDataConsumer(env, dataConsumer, listener).Release();
                              })
       .value_or(nullptr);

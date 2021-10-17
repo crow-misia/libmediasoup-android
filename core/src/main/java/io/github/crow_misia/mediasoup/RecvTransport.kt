@@ -45,6 +45,7 @@ class RecvTransport @CalledByNative private constructor(
         listener: DataConsumer.Listener,
         id: String,
         producerId: String,
+        streamId: Int,
         label: String,
         protocol: String = "",
         appData: String? = null,
@@ -55,6 +56,7 @@ class RecvTransport @CalledByNative private constructor(
             listener = listener,
             id = id,
             producerId = producerId,
+            streamId = streamId,
             label = label,
             protocol = protocol,
             appData = appData
@@ -80,6 +82,7 @@ class RecvTransport @CalledByNative private constructor(
         listener: DataConsumer.Listener,
         id: String,
         producerId: String,
+        streamId: Int,
         label: String,
         protocol: String,
         appData: String?,

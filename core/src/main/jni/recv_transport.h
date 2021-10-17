@@ -18,7 +18,7 @@ namespace mediasoupclient
 extern "C"
 {
   JNI_DEFINE_METHOD(jobject, RecvTransport, nativeConsume, jlong j_transport, jobject j_listener, jstring j_id, jstring j_producerId, jstring j_kind, jstring j_rtpParameters, jstring j_appData);
-  JNI_DEFINE_METHOD(jobject, RecvTransport, nativeConsumeData, jlong j_transport, jobject j_listener, jstring j_id, jstring j_producerId, jstring j_label, jstring j_protocol, jstring j_appData);
+  JNI_DEFINE_METHOD(jobject, RecvTransport, nativeConsumeData, jlong j_transport, jobject j_listener, jstring j_id, jstring j_producerId, jint j_stream_id, jstring j_label, jstring j_protocol, jstring j_appData);
 }
 
 extern jclass transportListenerClass;

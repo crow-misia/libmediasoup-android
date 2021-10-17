@@ -16,9 +16,7 @@ if [ ! -e $CURDIR/deps/webrtc.${WEBRTC_VERSION}.tar.xz ]; then
 fi
 pushd $CURDIR/deps/webrtc
   tar xf $CURDIR/deps/webrtc.${WEBRTC_VERSION}.tar.xz
-  rm -rf aar
   mv jar/*.jar lib/
-  rm -rf jar
 popd
 
 # libmediasoupclient
