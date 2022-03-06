@@ -49,13 +49,13 @@ extern "C"
                                {
                                  codecOptions = json::parse(JavaToNativeString(env, JavaParamRef<jstring>(env, j_codecOptions)));
                                }
-                               auto appData = json::object();
+                               json appData = nullptr;
                                if (j_appData != nullptr)
                                {
                                  appData = json::parse(JavaToNativeString(env, JavaParamRef<jstring>(env, j_appData)));
                                }
 
-                               auto producer = getSendTransport(j_transport)->Produce(listener, track, &encodings, &codecOptions, appData);
+                               auto producer = getSendTransport(j_transport)->Produce(listener, track, &encodings, &codecOptions, &appData);
                                return NativeToJavaProducer(env, producer, listener).Release();
                              })
       .value_or(nullptr);
@@ -71,7 +71,7 @@ extern "C"
                                auto listener = new DataProducerListenerJni(env, JavaParamRef<jobject>(env, j_listener));
                                auto label = JavaToNativeString(env, JavaParamRef<jstring>(env, j_label));
                                auto protocol = JavaToNativeString(env, JavaParamRef<jstring>(env, j_protocol));
-                               auto appData = json::object();
+                               json appData = nullptr;
                                if (j_appData != nullptr)
                                {
                                  appData = json::parse(JavaToNativeString(env, JavaParamRef<jstring>(env, j_appData)));
