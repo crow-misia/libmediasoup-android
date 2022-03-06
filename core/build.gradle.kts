@@ -14,7 +14,7 @@ object Maven {
     const val artifactId = "libmediasoup-android"
     const val name = "libmediasoup-android"
     const val desc = "mediasoup client side library for Android"
-    const val version = "0.8.0"
+    const val version = "0.8.1"
     const val siteUrl = "https://github.com/crow-misia/libmediasoup-android"
     const val gitUrl = "https://github.com/crow-misia/libmediasoup-android.git"
     const val githubRepo = "crow-misia/libmediasoup-android"
@@ -154,7 +154,7 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("maven") {
-                from(components["release"])
+                from(components.getByName("release"))
 
                 groupId = Maven.groupId
                 artifactId = Maven.artifactId
@@ -175,7 +175,7 @@ afterEvaluate {
                     url.set(Maven.siteUrl)
 
                     scm {
-                        val scmUrl = "scm:git:_"
+                        val scmUrl = "scm:git:${Maven.gitUrl}"
                         connection.set(scmUrl)
                         developerConnection.set(scmUrl)
                         url.set(Maven.gitUrl)
