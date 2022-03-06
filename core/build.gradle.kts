@@ -27,8 +27,8 @@ group = Maven.groupId
 version = Maven.version
 
 android {
-    buildToolsVersion = "31.0.0"
-    compileSdk = 31
+    buildToolsVersion = "32.0.0"
+    compileSdk = 32
 
     defaultConfig {
         minSdk = 21
@@ -54,7 +54,7 @@ android {
 
     lint {
         textReport = true
-        textOutput("stdout")
+        checkDependencies = true
     }
 
     libraryVariants.all {
@@ -97,8 +97,8 @@ android {
         kotlinOptions {
             freeCompilerArgs = listOf("-module-name", "libmediasoup-android")
             jvmTarget = "11"
-            apiVersion = "1.5"
-            languageVersion = "1.5"
+            apiVersion = "1.6"
+            languageVersion = "1.6"
         }
     }
 
@@ -108,7 +108,7 @@ android {
             path = file("${projectDir}/CMakeLists.txt")
         }
     }
-    ndkVersion = "23.0.7599858"
+    ndkVersion = "23.1.7779620"
 }
 
 dependencies {
