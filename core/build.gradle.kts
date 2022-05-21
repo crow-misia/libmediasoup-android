@@ -3,7 +3,7 @@ import java.net.URI
 
 plugins {
     id("com.android.library")
-    kotlin("android")
+    id("kotlin-android")
     id("org.jetbrains.dokka")
     id("maven-publish")
     id("signing")
@@ -14,7 +14,7 @@ object Maven {
     const val artifactId = "libmediasoup-android"
     const val name = "libmediasoup-android"
     const val desc = "mediasoup client side library for Android"
-    const val version = "0.8.1"
+    const val version = "0.9.0"
     const val siteUrl = "https://github.com/crow-misia/libmediasoup-android"
     const val gitUrl = "https://github.com/crow-misia/libmediasoup-android.git"
     const val githubRepo = "crow-misia/libmediasoup-android"
@@ -95,7 +95,7 @@ android {
 
     kotlin {
         kotlinOptions {
-            freeCompilerArgs = listOf("-module-name", "libmediasoup-android")
+            freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libmediasoup-android")
             jvmTarget = "11"
             apiVersion = "1.6"
             languageVersion = "1.6"
@@ -108,7 +108,7 @@ android {
             path = file("${projectDir}/CMakeLists.txt")
         }
     }
-    ndkVersion = "23.1.7779620"
+    ndkVersion = "24.0.8215888"
 }
 
 dependencies {
