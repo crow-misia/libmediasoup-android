@@ -55,7 +55,7 @@ extern "C"
                                  appData = json::parse(JavaToNativeString(env, JavaParamRef<jstring>(env, j_appData)));
                                }
 
-                               auto producer = getSendTransport(j_transport)->Produce(listener, track, &encodings, &codecOptions, &appData);
+                               auto producer = getSendTransport(j_transport)->Produce(listener, track, &encodings, &codecOptions, NULL, appData);
                                return NativeToJavaProducer(env, producer, listener).Release();
                              })
       .value_or(nullptr);
