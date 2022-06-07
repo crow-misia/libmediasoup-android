@@ -20,18 +20,18 @@ pushd $CURDIR/deps/webrtc
 popd
 
 # libmediasoupclient
-rm -rf $CURDIR/deps/libmediasoupclient
-if [ ! -e $CURDIR/deps/libmediasoupclient.${LIBMEDIASOUPCLIENT_VERSION}.tar.gz ]; then
-  curl -Lo $CURDIR/deps/libmediasoupclient.${LIBMEDIASOUPCLIENT_VERSION}.tar.gz https://github.com/versatica/libmediasoupclient/archive/${LIBMEDIASOUPCLIENT_VERSION}.tar.gz
-fi
-pushd $CURDIR/deps
-  tar xf $CURDIR/deps/libmediasoupclient.${LIBMEDIASOUPCLIENT_VERSION}.tar.gz
-  mv libmediasoupclient-${LIBMEDIASOUPCLIENT_VERSION} libmediasoupclient
-popd
-pushd $CURDIR/deps/libmediasoupclient
-  patch -u -p1 < $CURDIR/scripts/libmediasoupclient_add_virtual_deconstructor.patch
-  patch -u -p1 < $CURDIR/scripts/libmediasoupclient_whole_archive.patch
-popd
+#rm -rf $CURDIR/deps/libmediasoupclient
+#if [ ! -e $CURDIR/deps/libmediasoupclient.${LIBMEDIASOUPCLIENT_VERSION}.tar.gz ]; then
+#  curl -Lo $CURDIR/deps/libmediasoupclient.${LIBMEDIASOUPCLIENT_VERSION}.tar.gz https://github.com/versatica/libmediasoupclient/archive/${LIBMEDIASOUPCLIENT_VERSION}.tar.gz
+#fi
+#pushd $CURDIR/deps
+#  tar xf $CURDIR/deps/libmediasoupclient.${LIBMEDIASOUPCLIENT_VERSION}.tar.gz
+#  mv libmediasoupclient-${LIBMEDIASOUPCLIENT_VERSION} libmediasoupclient
+#popd
+#pushd $CURDIR/deps/libmediasoupclient
+#  patch -u -p1 < $CURDIR/scripts/libmediasoupclient_add_virtual_deconstructor.patch
+#  patch -u -p1 < $CURDIR/scripts/libmediasoupclient_whole_archive.patch
+#popd
 
 # JSON for Modern C++
 rm -f $CURDIR/deps/libmediasoupclient/deps/libsdptransform/include/json.hpp

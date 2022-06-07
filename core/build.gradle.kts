@@ -111,6 +111,10 @@ android {
     ndkVersion = "24.0.8215888"
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     api(Kotlin.stdlib)
     implementation(fileTree(mapOf("dir" to "${projectDir}/deps/webrtc/lib", "include" to arrayOf("*.jar"))))
@@ -122,6 +126,8 @@ dependencies {
     androidTestImplementation(AndroidX.test.ext.junitKtx)
     androidTestImplementation(AndroidX.test.espresso.core)
     androidTestImplementation("com.willowtreeapps.assertk:assertk-jvm:_")
+    implementation("androidx.core:core-ktx:+")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21")
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
