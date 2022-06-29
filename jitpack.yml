@@ -1,3 +1,0 @@
-install: 
-FILE="-Dfile=libmediasoup-android-0.0.1.aar" 
-mvn install:install-file $FILE -DgroupId=live.videosdk -DartifactId=libmediasoup-android -Dversion=vsl0.0.4 -Dpackaging=aar -DpomFile=pom.xml
