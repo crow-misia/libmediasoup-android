@@ -114,14 +114,14 @@ android {
 dependencies {
     api(Kotlin.stdlib)
     implementation(fileTree(mapOf("dir" to "${projectDir}/deps/webrtc/lib", "include" to arrayOf("*.jar"))))
-    api("io.github.crow-misia.libwebrtc:libwebrtc-ktx:_")
+    api(libs.libwebrtc.ktx)
 
     testImplementation(Testing.junit4)
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:_")
+    testImplementation(libs.assertk.jvm)
     androidTestImplementation(Testing.junit4)
-    androidTestImplementation(AndroidX.test.ext.junitKtx)
+    androidTestImplementation(AndroidX.test.ext.junit.ktx)
     androidTestImplementation(AndroidX.test.espresso.core)
-    androidTestImplementation("com.willowtreeapps.assertk:assertk-jvm:_")
+    androidTestImplementation(libs.assertk.jvm)
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
@@ -136,7 +136,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         noAndroidSdkLink.set(false)
     }
     dependencies {
-        plugins("org.jetbrains.dokka:javadoc-plugin:_")
+        plugins(libs.javadoc.plugin)
     }
     inputs.dir("src/main/java")
     outputDirectory.set(buildDir.resolve("javadoc"))
