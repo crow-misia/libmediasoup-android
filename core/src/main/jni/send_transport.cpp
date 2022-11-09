@@ -38,7 +38,7 @@ extern "C"
     return handleNativeCrash(env,
                              [&]() {
                                auto listener = new ProducerListenerJni(env, JavaParamRef<jobject>(env, j_listener));
-                               auto track = reinterpret_cast<MediaStreamTrackInterface*>(j_track);
+                               auto track = rtc::scoped_refptr(reinterpret_cast<MediaStreamTrackInterface*>(j_track));
                                std::vector<RtpEncodingParameters> encodings;
                                if (j_encodings != nullptr)
                                {
