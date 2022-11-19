@@ -9,8 +9,8 @@ plugins {
 apply(from = "../publish.gradle")
 
 android {
-    buildToolsVersion = "32.0.0"
-    compileSdk = 32
+    buildToolsVersion = "33.0.0"
+    compileSdk = 33
 
     defaultConfig {
         minSdk = 21
@@ -79,18 +79,22 @@ android {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libmediasoup-android")
             jvmTarget = "11"
-            apiVersion = "1.6"
-            languageVersion = "1.6"
+            apiVersion = "1.7"
+            languageVersion = "1.7"
         }
     }
 
     externalNativeBuild {
         cmake {
-            version = "3.18.1"
+            version = "3.22.1"
             path = file("${projectDir}/CMakeLists.txt")
         }
     }
-    ndkVersion = "24.0.8215888"
+    ndkVersion = "25.1.8937393"
+}
+
+repositories {
+    mavenCentral()
 }
 
 repositories {
@@ -100,14 +104,14 @@ repositories {
 dependencies {
     api(Kotlin.stdlib)
     implementation(fileTree(mapOf("dir" to "${projectDir}/deps/webrtc/lib", "include" to arrayOf("*.jar"))))
-    api("io.github.crow-misia.libwebrtc:libwebrtc-ktx:_")
+    api(libs.libwebrtc.ktx)
 
     testImplementation(Testing.junit4)
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:_")
+    testImplementation(libs.assertk.jvm)
     androidTestImplementation(Testing.junit4)
-    androidTestImplementation(AndroidX.test.ext.junitKtx)
+    androidTestImplementation(AndroidX.test.ext.junit.ktx)
     androidTestImplementation(AndroidX.test.espresso.core)
-    androidTestImplementation("com.willowtreeapps.assertk:assertk-jvm:_")
+    androidTestImplementation(libs.assertk.jvm)
     implementation("androidx.core:core-ktx:+")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21")
 }
@@ -124,7 +128,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         noAndroidSdkLink.set(false)
     }
     dependencies {
-        plugins("org.jetbrains.dokka:javadoc-plugin:_")
+        plugins(libs.javadoc.plugin)
     }
     inputs.dir("src/main/java")
     outputDirectory.set(buildDir.resolve("javadoc"))
