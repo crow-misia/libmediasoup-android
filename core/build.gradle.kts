@@ -14,7 +14,7 @@ object Maven {
     const val artifactId = "libmediasoup-android"
     const val name = "libmediasoup-android"
     const val desc = "mediasoup client side library for Android"
-    const val version = "0.11.0"
+    const val version = "0.12.0"
     const val siteUrl = "https://github.com/crow-misia/libmediasoup-android"
     const val gitUrl = "https://github.com/crow-misia/libmediasoup-android.git"
     const val githubRepo = "crow-misia/libmediasoup-android"
@@ -27,12 +27,13 @@ group = Maven.groupId
 version = Maven.version
 
 android {
-    buildToolsVersion = "33.0.0"
+    buildToolsVersion = "33.0.1"
     compileSdk = 33
 
     defaultConfig {
         minSdk = 21
         consumerProguardFiles("consumer-proguard-rules.pro")
+        namespace = "io.github.crow_misia.mediasoup"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
