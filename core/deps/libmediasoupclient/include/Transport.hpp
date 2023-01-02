@@ -42,7 +42,6 @@ namespace mediasoupclient
 		  const nlohmann::json& appData);
 
 	public:
-		virtual ~Transport() = default;
 		const std::string& GetId() const;
 		bool IsClosed() const;
 		const std::string& GetConnectionState() const;
@@ -130,7 +129,7 @@ namespace mediasoupclient
 	public:
 		Producer* Produce(
 		  Producer::Listener* producerListener,
-		  webrtc::MediaStreamTrackInterface* track,
+		  rtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
 		  const std::vector<webrtc::RtpEncodingParameters>* encodings,
 		  const nlohmann::json* codecOptions,
 		  const nlohmann::json* codec,

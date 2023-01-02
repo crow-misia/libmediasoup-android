@@ -29,8 +29,9 @@ pushd $CURDIR/deps
   mv libmediasoupclient-${LIBMEDIASOUPCLIENT_VERSION} libmediasoupclient
 popd
 pushd $CURDIR/deps/libmediasoupclient
-  patch -u -p1 < $CURDIR/scripts/libmediasoupclient_add_virtual_deconstructor.patch
   patch -u -p1 < $CURDIR/scripts/libmediasoupclient_whole_archive.patch
+  patch -u -p1 < $CURDIR/scripts/libmediasoupclient_cpp17.patch
+  patch -u -p1 < $CURDIR/scripts/libmediasoupclient_m100.patch
 popd
 
 # JSON for Modern C++

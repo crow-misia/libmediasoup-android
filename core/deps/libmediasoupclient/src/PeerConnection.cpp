@@ -10,7 +10,7 @@
 #include <api/video_codecs/builtin_video_decoder_factory.h>
 #include <api/video_codecs/builtin_video_encoder_factory.h>
 #include <rtc_base/ssl_adapter.h>
-
+#include <android/log.h>
 using json = nlohmann::json;
 
 namespace mediasoupclient
@@ -300,8 +300,11 @@ namespace mediasoupclient
 		auto result = this->pc->AddTransceiver(
 		  track, rtpTransceiverInit); // NOLINT(performance-unnecessary-value-param)
 
+
 		if (!result.ok())
 		{
+			__android_log_print(ANDROID_LOG_ERROR, "encodings", "%s",result.error().message());
+
 			rtc::scoped_refptr<webrtc::RtpTransceiverInterface> transceiver = nullptr;
 
 			return transceiver;
@@ -317,11 +320,11 @@ namespace mediasoupclient
 		return this->pc->GetSenders();
 	}
 
-	bool PeerConnection::RemoveTrack(webrtc::RtpSenderInterface* sender)
+	webrtc::RTCError PeerConnection::RemoveTrack(rtc::scoped_refptr<webrtc::RtpSenderInterface> sender)
 	{
 		MSC_TRACE();
 
-		return this->pc->RemoveTrack(sender);
+		return this->pc->RemoveTrackOrError(sender);
 	}
 
 	json PeerConnection::GetStats()

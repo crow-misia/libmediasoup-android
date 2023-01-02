@@ -8,7 +8,9 @@
 #include "scalabilityMode.hpp"
 #include "sdptransform.hpp"
 #include "sdp/Utils.hpp"
+#include "absl/strings/str_format.h"
 #include <cinttypes> // PRIu64, etc
+#include <android/log.h>
 
 using json = nlohmann::json;
 
@@ -168,11 +170,10 @@ namespace mediasoupclient
 	};
 
 	SendHandler::SendResult SendHandler::Send(
-            webrtc::MediaStreamTrackInterface* track,
-            std::vector<webrtc::RtpEncodingParameters>* encodings,
-            const json* codecOptions,
-            const json* codec,
-            nlohmann::basic_json<> appData)
+	  rtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
+	  std::vector<webrtc::RtpEncodingParameters>* encodings,
+	  const json* codecOptions,
+	  const json* codec)
 	{
 		MSC_TRACE();
 
@@ -207,14 +208,23 @@ namespace mediasoupclient
 		webrtc::RtpTransceiverInit transceiverInit;
 		transceiverInit.direction = webrtc::RtpTransceiverDirection::kSendOnly;
 
-		if (encodings && !encodings->empty())
+		if (encodings && !encodings->empty()) {
+			__android_log_print(ANDROID_LOG_ERROR, "encodings", "%s","hi");
 			transceiverInit.send_encodings = *encodings;
+		}
 
-		webrtc::RtpTransceiverInterface* transceiver = this->pc->AddTransceiver(track, transceiverInit);
+		for(webrtc::RtpEncodingParameters e: transceiverInit.send_encodings)
+		{
+			__android_log_print(ANDROID_LOG_ERROR, "encodings", "%s",e.rid.c_str());
+			__android_log_print(ANDROID_LOG_ERROR, "encodings scale_resolution_down_by", "%s",absl::StrFormat("%f", e.scale_resolution_down_by.value()).c_str());
+		}
 
-		if (!transceiver)
-			MSC_THROW_ERROR("error creating transceiver");
 
+			webrtc::RtpTransceiverInterface *transceiver = this->pc->AddTransceiver(track,
+																					transceiverInit);
+
+			if (!transceiver)
+				MSC_THROW_ERROR("error creating transceiver");
 		std::string offer;
 		std::string localId;
 
@@ -353,24 +363,6 @@ namespace mediasoupclient
 
 		// Store in the map.
 		this->mapMidTransceiver[localId] = transceiver;
-
-		if (appData.contains("degradationPref")) {
-
-			auto parameters = transceiver->sender()->GetParameters();
-
-			if (appData.find("degradationPref").value() == "text" ||
-				appData.find("degradationPref").value() == "detail") {
-				parameters.degradation_preference = webrtc::DegradationPreference::MAINTAIN_RESOLUTION;
-			} else if (appData.find("degradationPref").value() == "motion") {
-				parameters.degradation_preference = webrtc::DegradationPreference::MAINTAIN_FRAMERATE;
-			}
-
-			auto result = transceiver->sender()->SetParameters(parameters);
-
-			if (!result.ok())
-				MSC_THROW_ERROR("%s", result.message());
-
-		}
 
 		SendResult sendResult;
 

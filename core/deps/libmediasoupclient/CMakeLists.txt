@@ -4,7 +4,7 @@ project(mediasoupclient LANGUAGES CXX)
 
 # Set version number.
 set(mediasoupclient_VERSION_MAJOR 3)
-set(mediasoupclient_VERSION_MINOR 3)
+set(mediasoupclient_VERSION_MINOR 4)
 set(mediasoupclient_VERSION_PATCH 0)
 
 # Configure a header file to pass the version.
@@ -14,7 +14,7 @@ configure_file (
 )
 
 # C++ standard requirements.
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Project options.

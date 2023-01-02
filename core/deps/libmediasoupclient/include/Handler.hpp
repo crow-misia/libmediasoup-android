@@ -101,12 +101,11 @@ namespace mediasoupclient
 
 	public:
 		SendResult Send(
-				webrtc::MediaStreamTrackInterface* track,
-				std::vector<webrtc::RtpEncodingParameters>* encodings,
-				const nlohmann::json* codecOptions,
-				const nlohmann::json* codec,
-				nlohmann::basic_json<> appData);
-		void StopSending(const std::string& localIsd);
+		  rtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
+		  std::vector<webrtc::RtpEncodingParameters>* encodings,
+		  const nlohmann::json* codecOptions,
+		  const nlohmann::json* codec);
+		void StopSending(const std::string& localId);
 		void ReplaceTrack(const std::string& localId, webrtc::MediaStreamTrackInterface* track);
 		void SetMaxSpatialLayer(const std::string& localId, uint8_t spatialLayer);
 		nlohmann::json GetSenderStats(const std::string& localId);

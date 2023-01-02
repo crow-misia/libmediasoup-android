@@ -126,7 +126,7 @@ namespace mediasoupclient
 		  rtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
 		  webrtc::RtpTransceiverInit rtpTransceiverInit);
 		std::vector<rtc::scoped_refptr<webrtc::RtpSenderInterface>> GetSenders();
-		bool RemoveTrack(webrtc::RtpSenderInterface* sender);
+		webrtc::RTCError RemoveTrack(rtc::scoped_refptr<webrtc::RtpSenderInterface> sender);
 		nlohmann::json GetStats();
 		nlohmann::json GetStats(rtc::scoped_refptr<webrtc::RtpSenderInterface> selector);
 		nlohmann::json GetStats(rtc::scoped_refptr<webrtc::RtpReceiverInterface> selector);

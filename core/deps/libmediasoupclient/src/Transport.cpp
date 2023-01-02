@@ -174,7 +174,7 @@ namespace mediasoupclient
 	 */
 	Producer* SendTransport::Produce(
 	  Producer::Listener* producerListener,
-	  webrtc::MediaStreamTrackInterface* track,
+	  rtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
 	  const std::vector<webrtc::RtpEncodingParameters>* encodings,
 	  const json* codecOptions,
 	  const json* codec,
@@ -217,7 +217,7 @@ namespace mediasoupclient
 		}
 
 		// May throw.
-		auto sendResult = this->sendHandler->Send(track, &normalizedEncodings, codecOptions, codec,appData);
+		auto sendResult = this->sendHandler->Send(track, &normalizedEncodings, codecOptions, codec);
 
 		try
 		{

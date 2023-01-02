@@ -4,6 +4,7 @@ plugins {
 }
 
 buildscript {
+    val kotlin_version by extra("1.8.0-Beta")
     repositories {
         google()
         mavenCentral()
@@ -11,6 +12,7 @@ buildscript {
     dependencies {
         classpath(Android.tools.build.gradlePlugin)
         classpath(libs.dokka.gradle.plugin)
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
 
