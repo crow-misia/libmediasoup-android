@@ -30,9 +30,18 @@ class Device(
     /**
      * Initialize the Device.
      */
-    fun load(routerRtpCapabilities: String) {
+    @JvmOverloads
+    fun load(
+        routerRtpCapabilities: String,
+        rtcConfig: PeerConnection.RTCConfiguration? = null,
+    ) {
         checkDeviceExists()
-        nativeLoad(nativeDevice, routerRtpCapabilities)
+        nativeLoad(
+            nativeDevice = nativeDevice,
+            routerRtpCapabilities = routerRtpCapabilities,
+            rtcConfig = rtcConfig,
+            peerConnectionFactory = peerConnectionFactory.nativePeerConnectionFactory,
+        )
     }
 
     /**
@@ -54,7 +63,7 @@ class Device(
         iceCandidates: String,
         dtlsParameters: String,
         sctpParameters: String? = null,
-        rtcConfig: PeerConnection.RTCConfiguration,
+        rtcConfig: PeerConnection.RTCConfiguration? = null,
         appData: String? = null,
     ): SendTransport {
         checkDeviceExists()
@@ -66,7 +75,7 @@ class Device(
             iceCandidates = iceCandidates,
             dtlsParameters = dtlsParameters,
             sctpParameters = sctpParameters,
-            configuration = rtcConfig,
+            rtcConfig = rtcConfig,
             peerConnectionFactory = peerConnectionFactory.nativePeerConnectionFactory,
             appData = appData,
         )
@@ -83,7 +92,7 @@ class Device(
         iceCandidates: String,
         dtlsParameters: String,
         sctpParameters: String? = null,
-        rtcConfig: PeerConnection.RTCConfiguration,
+        rtcConfig: PeerConnection.RTCConfiguration? = null,
         appData: String? = null,
     ): RecvTransport {
         checkDeviceExists()
@@ -95,7 +104,7 @@ class Device(
             iceCandidates = iceCandidates,
             dtlsParameters = dtlsParameters,
             sctpParameters = sctpParameters,
-            configuration = rtcConfig,
+            rtcConfig = rtcConfig,
             peerConnectionFactory = peerConnectionFactory.nativePeerConnectionFactory,
             appData = appData,
         )
@@ -119,7 +128,12 @@ class Device(
     private external fun nativeIsLoaded(nativeDevice: Long): Boolean
     private external fun nativeGetRtpCapabilities(nativeDevice: Long): String
     private external fun nativeGetSctpCapabilities(nativeDevice: Long): String
-    private external fun nativeLoad(nativeDevice: Long, routerRtpCapabilities: String)
+    private external fun nativeLoad(
+        nativeDevice: Long,
+        routerRtpCapabilities: String,
+        rtcConfig: PeerConnection.RTCConfiguration?,
+        peerConnectionFactory: Long,
+    )
     private external fun nativeCanProduce(nativeDevice: Long, kind: String): Boolean
     private external fun nativeCreateSendTransport(
         nativeDevice: Long,
@@ -129,7 +143,7 @@ class Device(
         iceCandidates: String,
         dtlsParameters: String,
         sctpParameters: String?,
-        configuration: PeerConnection.RTCConfiguration,
+        rtcConfig: PeerConnection.RTCConfiguration?,
         peerConnectionFactory: Long,
         appData: String?,
     ): SendTransport
@@ -142,7 +156,7 @@ class Device(
         iceCandidates: String,
         dtlsParameters: String,
         sctpParameters: String?,
-        configuration: PeerConnection.RTCConfiguration,
+        rtcConfig: PeerConnection.RTCConfiguration?,
         peerConnectionFactory: Long,
         appData: String?,
     ): RecvTransport

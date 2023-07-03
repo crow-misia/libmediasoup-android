@@ -75,13 +75,16 @@ extern "C"
       .value_or(nullptr);
   }
 
-  JNI_DEFINE_METHOD(void, Device, nativeLoad, jlong j_device, jstring j_routerRtpCapabilities)
+  JNI_DEFINE_METHOD(void, Device, nativeLoad, jlong j_device, jstring j_routerRtpCapabilities,
+                    jobject j_configuration, jlong j_peerConnectionFactory)
   {
     MSC_TRACE();
 
     handleNativeCrashNoReturn(env, [&]() {
       auto capabilities = JavaToNativeString(env, JavaParamRef<jstring>(env, j_routerRtpCapabilities));
-      reinterpret_cast<Device*>(j_device)->Load(json::parse(capabilities));
+      PeerConnection::Options options;
+      JavaToNativeOptions(env, JavaParamRef<jobject>(env, j_configuration), j_peerConnectionFactory, options);
+      reinterpret_cast<Device*>(j_device)->Load(json::parse(capabilities), &options);
     });
   }
 
