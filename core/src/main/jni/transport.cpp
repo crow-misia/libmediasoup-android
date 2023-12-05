@@ -69,7 +69,7 @@ extern "C"
   {
     MSC_TRACE();
 
-    handleNativeCrashNoReturn(env, [&]() { reinterpret_cast<Transport*>(j_transport)->Close(); });
+    handleNativeCrashNoReturn(env, [&]() { getTransport(j_transport)->Close(); });
   }
 
   JNI_DEFINE_METHOD(jstring, Transport, nativeGetStats, jlong j_transport)
