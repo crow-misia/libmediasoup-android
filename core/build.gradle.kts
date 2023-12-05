@@ -1,14 +1,13 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     id("com.android.library")
-    id("kotlin-android")
     id("org.jetbrains.dokka")
     id("maven-publish")
     id("signing")
+    kotlin("android")
 }
 
 object Maven {
@@ -30,7 +29,7 @@ version = Maven.version
 
 android {
     namespace = "io.github.crow_misia.mediasoup"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 21
@@ -85,6 +84,7 @@ android {
     }
 
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility(JavaVersion.VERSION_11)
         targetCompatibility(JavaVersion.VERSION_11)
     }
@@ -95,7 +95,7 @@ android {
             path = file("${projectDir}/CMakeLists.txt")
         }
     }
-    ndkVersion = "25.2.9519653"
+    ndkVersion = "26.1.10909125"
 
     publishing {
         singleVariant("release") {
@@ -104,20 +104,22 @@ android {
     }
 }
 
-tasks.withType<KotlinJvmCompile>().all {
+kotlin {
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
         javaParameters.set(true)
         jvmTarget.set(JvmTarget.JVM_11)
-        apiVersion.set(KotlinVersion.KOTLIN_1_8)
-        languageVersion.set(KotlinVersion.KOTLIN_1_8)
+        apiVersion.set(KotlinVersion.KOTLIN_1_9)
+        languageVersion.set(KotlinVersion.KOTLIN_1_9)
     }
 }
 
 dependencies {
-    api(Kotlin.stdlib)
+    coreLibraryDesugaring(Android.tools.desugarJdkLibs)
+
+    implementation(Kotlin.stdlib)
     implementation(fileTree(mapOf("dir" to "${projectDir}/deps/webrtc/lib", "include" to arrayOf("*.jar"))))
-    api(libs.libwebrtc.ktx)
+    implementation(libs.libwebrtc.ktx)
 
     testImplementation(Testing.junit4)
     testImplementation(libs.assertk.jvm)
@@ -135,7 +137,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         plugins(libs.javadoc.plugin)
     }
     inputs.dir("src/main/java")
-    outputDirectory.set(buildDir.resolve("javadoc"))
+    outputDirectory.set(layout.buildDirectory.dir("javadoc"))
 }
 
 val javadocJar by tasks.creating(Jar::class) {

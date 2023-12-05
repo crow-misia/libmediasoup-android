@@ -1,5 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
+    id("com.android.library") apply false
     kotlin("android") apply false
 }
 
@@ -14,14 +15,7 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
 val clean by tasks.creating(Delete::class) {
     group = "build"
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }

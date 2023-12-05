@@ -2,20 +2,14 @@
 
 [versions]
 
-dokka = "1.8.20"
+dokka = "1.9.10"
 
 [libraries]
 
-org-jacoco-ant = "org.jacoco:org.jacoco.ant:0.8.8"
+assertk-jvm = "com.willowtreeapps.assertk:assertk-jvm:0.27.0"
 
-assertk-jvm = "com.willowtreeapps.assertk:assertk-jvm:0.26.1"
-
-libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.7.0"
+libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.9.1"
 
 dokka-gradle-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref="dokka" }
-
-dokka-analysis = { group = "org.jetbrains.dokka", name = "dokka-analysis", version.ref="dokka" }
-
-dokka-base = { group = "org.jetbrains.dokka", name = "dokka-base", version.ref="dokka" }
 
 javadoc-plugin = { group = "org.jetbrains.dokka", name = "javadoc-plugin", version.ref="dokka" }
