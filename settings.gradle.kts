@@ -19,4 +19,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "libmediasoup-android"
-include(":core")
+include("core")

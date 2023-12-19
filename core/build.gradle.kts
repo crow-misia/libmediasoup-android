@@ -3,11 +3,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.dokka")
-    id("maven-publish")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.kotlin.android)
     id("signing")
-    kotlin("android")
+    id("maven-publish")
 }
 
 object Maven {
@@ -40,9 +41,9 @@ android {
         externalNativeBuild {
             cmake {
                 arguments += listOf(
-                    "-DLIBWEBRTC_INCLUDE_PATH=${projectDir}/deps/webrtc/include",
-                    "-DLIBWEBRTC_BINARY_ANDROID_PATH=${projectDir}/deps/webrtc/lib",
-                    "-DLIBMEDIASOUPCLIENT_ROOT_PATH=${projectDir}/deps/libmediasoupclient",
+                    "-DLIBWEBRTC_INCLUDE_PATH=${projectDir.resolve("deps/webrtc/include")}",
+                    "-DLIBWEBRTC_BINARY_ANDROID_PATH=${projectDir.resolve("deps/webrtc/lib")}",
+                    "-DLIBMEDIASOUPCLIENT_ROOT_PATH=${projectDir.resolve("deps/libmediasoupclient")}",
                     "-DMEDIASOUPCLIENT_BUILD_TESTS=OFF"
                 )
             }
@@ -84,8 +85,21 @@ android {
         baseline = file("lint-baseline.xml")
         disable.add("ChromeOsAbiSupport")
     }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+        unitTests.all {
+            it.useJUnitPlatform()
+            it.testLogging {
+                showStandardStreams = true
+                events("passed", "skipped", "failed")
+            }
+        }
+    }
+
     compileOptions {
-        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility(JavaVersion.VERSION_11)
         targetCompatibility(JavaVersion.VERSION_11)
     }
@@ -93,7 +107,7 @@ android {
     externalNativeBuild {
         cmake {
             version = "3.22.1"
-            path = file("${projectDir}/CMakeLists.txt")
+            path = projectDir.resolve("CMakeLists.txt")
         }
     }
     ndkVersion = "26.1.10909125"
@@ -116,18 +130,28 @@ kotlin {
 }
 
 dependencies {
-    coreLibraryDesugaring(Android.tools.desugarJdkLibs)
+    implementation(fileTree(mapOf("dir" to projectDir.resolve("deps/webrtc/lib"), "include" to arrayOf("*.jar"))))
 
-    implementation(Kotlin.stdlib)
-    implementation(fileTree(mapOf("dir" to "${projectDir}/deps/webrtc/lib", "include" to arrayOf("*.jar"))))
+    implementation(libs.kotlin.stdlib)
     implementation(libs.libwebrtc.ktx)
 
-    testImplementation(Testing.junit4)
-    testImplementation(libs.assertk.jvm)
-    androidTestImplementation(Testing.junit4)
-    androidTestImplementation(AndroidX.test.ext.junit.ktx)
-    androidTestImplementation(AndroidX.test.espresso.core)
-    androidTestImplementation(libs.assertk.jvm)
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotest.property)
+    testImplementation(libs.mockk)
+
+    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(libs.mockk.android)
+
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotest.property)
+    testImplementation(libs.mockk)
+
+    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(libs.mockk.android)
 }
 
 val customDokkaTask by tasks.creating(DokkaTask::class) {
@@ -135,7 +159,7 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         noAndroidSdkLink.set(false)
     }
     dependencies {
-        plugins(libs.javadoc.plugin)
+        plugins(libs.dokka.javadoc.plugin)
     }
     inputs.dir("src/main/java")
     outputDirectory.set(layout.buildDirectory.dir("javadoc"))
