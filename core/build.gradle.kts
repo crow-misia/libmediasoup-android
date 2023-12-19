@@ -53,11 +53,6 @@ android {
         }
     }
 
-    lint {
-        textReport = true
-        checkDependencies = true
-    }
-
     buildTypes {
         debug {
             isJniDebuggable = true
@@ -83,6 +78,12 @@ android {
         }
     }
 
+    lint {
+        textReport = true
+        checkDependencies = true
+        baseline = file("lint-baseline.xml")
+        disable.add("ChromeOsAbiSupport")
+    }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility(JavaVersion.VERSION_11)
@@ -218,12 +219,27 @@ afterEvaluate {
     }
 }
 
+detekt {
+    parallel = true
+    buildUponDefaultConfig = true
+    allRules = false
+    autoCorrect = true
+    config.setFrom(files("$rootDir/config/detekt.yml"))
+}
+
 tasks {
-    withType<Test> {
-        useJUnitPlatform()
-        testLogging {
-            showStandardStreams = true
-            events("passed", "skipped", "failed")
+    withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+        // Target version of the generated JVM bytecode. It is used for type resolution.
+        jvmTarget = "11"
+
+        reports {
+            html.required.set(true)
+            xml.required.set(true)
+            txt.required.set(true)
+            sarif.required.set(true)
         }
+    }
+    withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
+        jvmTarget = "11"
     }
 }

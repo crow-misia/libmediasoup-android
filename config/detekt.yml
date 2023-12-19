@@ -1,0 +1,14 @@
+build:
+  maxIssues: 0
+
+complexity:
+  TooManyFunctions:
+    active: false
+
+style:
+  WildcardImport:
+    active: false
+
+naming:
+  PackageNaming:
+    active: false
