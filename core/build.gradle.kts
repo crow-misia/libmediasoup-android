@@ -250,20 +250,3 @@ detekt {
     autoCorrect = true
     config.setFrom(files("$rootDir/config/detekt.yml"))
 }
-
-tasks {
-    withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-        // Target version of the generated JVM bytecode. It is used for type resolution.
-        jvmTarget = "11"
-
-        reports {
-            html.required.set(true)
-            xml.required.set(true)
-            txt.required.set(true)
-            sarif.required.set(true)
-        }
-    }
-    withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
-        jvmTarget = "11"
-    }
-}
