@@ -22,7 +22,7 @@ androidx-test-espresso = "3.6.0-alpha02"
 
 kotest = "5.8.0"
 
-mockk = "1.13.8"
+mockk = "1.13.9"
 
 dokka = "1.9.10"
 
