@@ -12,27 +12,43 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 [versions]
 
-android-gradle-plugin = "8.2.0"
+android-gradle-plugin = "8.2.2"
 
 kotlin = "1.9.22"
 
-androidx-test-ext-junit = "1.2.0-alpha02"
+kotlinx-coroutines = "1.7.3"
 
-androidx-test-espresso = "3.6.0-alpha02"
+androidx-test-ext-junit = "1.2.0-alpha03"
+
+androidx-test-ext-truth = "1.6.0-alpha03"
+
+androidx-test-espresso = "3.6.0-alpha03"
 
 kotest = "5.8.0"
 
 mockk = "1.13.9"
 
+truth = "1.4.0"
+
 dokka = "1.9.10"
 
 [libraries]
 
-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
+
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib" }
+
+kotlinx-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "kotlinx-coroutines" }
+
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android" }
+
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test" }
 
 libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.9.2"
 
 androidx-test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-test-ext-junit" }
+
+androidx-test-ext-truth = { group = "androidx.test.ext", name = "truth", version.ref = "androidx-test-ext-truth" }
 
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
 
@@ -45,5 +61,7 @@ kotest-property = { group = "io.kotest", name = "kotest-property", version.ref =
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 
 dokka-javadoc-plugin = { group = "org.jetbrains.dokka", name = "javadoc-plugin", version.ref = "dokka" }
