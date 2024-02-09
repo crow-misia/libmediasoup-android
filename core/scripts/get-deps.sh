@@ -33,10 +33,3 @@ pushd $CURDIR/deps/libmediasoupclient
   patch -u -p1 < $CURDIR/scripts/libmediasoupclient_cpp17.patch
   patch -u -p1 < $CURDIR/scripts/libmediasoupclient_m100.patch
 popd
-
-# JSON for Modern C++
-rm -f $CURDIR/deps/libmediasoupclient/deps/libsdptransform/include/json.hpp
-if [ ! -e $CURDIR/deps/json-${JSON_FOR_MODERN_CPP_VERSION}.hpp ]; then
-  curl -Lo $CURDIR/deps/json-${JSON_FOR_MODERN_CPP_VERSION}.hpp https://github.com/nlohmann/json/releases/download/v${JSON_FOR_MODERN_CPP_VERSION}/json.hpp
-fi
-cp $CURDIR/deps/json-${JSON_FOR_MODERN_CPP_VERSION}.hpp $CURDIR/deps/libmediasoupclient/deps/libsdptransform/include/json.hpp
