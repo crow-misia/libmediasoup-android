@@ -16,7 +16,7 @@ android-gradle-plugin = "8.2.2"
 
 kotlin = "1.9.22"
 
-kotlinx-coroutines = "1.7.3"
+kotlinx-coroutines = "1.8.0"
 
 androidx-test-ext-junit = "1.2.0-alpha03"
 
@@ -48,7 +48,7 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test" }
 
-libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.9.2"
+libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.9.3"
 
 androidx-test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-test-ext-junit" }
 
