@@ -32,7 +32,7 @@ kotest = "5.8.0"
 
 mockk = "1.13.9"
 
-truth = "1.4.0"
+truth = "1.4.1"
 
 dokka = "1.9.10"
 
