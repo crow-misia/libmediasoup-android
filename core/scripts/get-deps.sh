@@ -31,5 +31,5 @@ popd
 pushd $CURDIR/deps/libmediasoupclient
   patch -u -p1 < $CURDIR/scripts/libmediasoupclient_whole_archive.patch
   patch -u -p1 < $CURDIR/scripts/libmediasoupclient_cpp17.patch
-  patch -u -p1 < $CURDIR/scripts/libmediasoupclient_m100.patch
+  patch -u -p1 < $CURDIR/scripts/libmediasoupclient_m123.patch
 popd
