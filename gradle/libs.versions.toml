@@ -12,7 +12,7 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 [versions]
 
-android-gradle-plugin = "8.2.2"
+android-gradle-plugin = "8.3.0"
 
 kotlin = "1.9.22"
 
@@ -32,7 +32,7 @@ kotest = "5.8.0"
 
 mockk = "1.13.10"
 
-truth = "1.4.1"
+truth = "1.4.2"
 
 dokka = "1.9.10"
 
