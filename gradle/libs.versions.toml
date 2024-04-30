@@ -18,15 +18,15 @@ kotlin = "1.9.23"
 
 kotlinx-coroutines = "1.8.0"
 
-androidx-test-ext-junit = "1.2.0-alpha03"
+androidx-test-ext-junit = "1.2.0-alpha04"
 
-androidx-test-ext-truth = "1.6.0-alpha03"
+androidx-test-ext-truth = "1.6.0-alpha04"
 
-androidx-test-espresso = "3.6.0-alpha03"
+androidx-test-espresso = "3.6.0-alpha04"
 
-androidx-test-runner = "1.6.0-alpha06"
+androidx-test-runner = "1.6.0-alpha07"
 
-androidx-test-rules = "1.6.0-alpha03"
+androidx-test-rules = "1.6.0-alpha04"
 
 kotest = "5.8.1"
 
