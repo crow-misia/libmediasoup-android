@@ -16,7 +16,7 @@ android-gradle-plugin = "8.4.0"
 
 kotlin = "1.9.24"
 
-kotlinx-coroutines = "1.8.0"
+kotlinx-coroutines = "1.8.1"
 
 androidx-test-ext-junit = "1.2.0-alpha04"
 
