@@ -30,7 +30,7 @@ androidx-test-rules = "1.6.1"
 
 kotest = "5.9.1"
 
-mockk = "1.13.11"
+mockk = "1.13.12"
 
 truth = "1.4.4"
 
