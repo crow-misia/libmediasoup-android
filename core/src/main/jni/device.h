@@ -26,7 +26,8 @@ extern "C"
 
   JNI_DEFINE_METHOD(jstring, Device, nativeGetSctpCapabilities, jlong j_device);
 
-  JNI_DEFINE_METHOD(void, Device, nativeLoad, jlong j_device, jstring j_routerRtpCapabilities);
+  JNI_DEFINE_METHOD(void, Device, nativeLoad, jlong j_device, jstring j_routerRtpCapabilities,
+                    jobject j_configuration, jlong j_peerConnectionFactory);
 
   JNI_DEFINE_METHOD(jboolean, Device, nativeCanProduce, jlong j_device, jstring j_kind);
 

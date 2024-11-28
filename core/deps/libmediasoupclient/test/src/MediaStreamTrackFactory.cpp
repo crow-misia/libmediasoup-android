@@ -63,7 +63,7 @@ static void createFactory()
 }
 
 // Audio track creation.
-rtc::scoped_refptr<webrtc::AudioTrackInterface> createAudioTrack(const std::string& label)
+webrtc::scoped_refptr<webrtc::AudioTrackInterface> createAudioTrack(const std::string& label)
 {
 	if (!Factory)
 		createFactory();
@@ -71,16 +71,18 @@ rtc::scoped_refptr<webrtc::AudioTrackInterface> createAudioTrack(const std::stri
 	cricket::AudioOptions options;
 	options.highpass_filter = false;
 
-	rtc::scoped_refptr<webrtc::AudioSourceInterface> source = Factory->CreateAudioSource(options);
+	webrtc::scoped_refptr<webrtc::AudioSourceInterface> source = Factory->CreateAudioSource(options);
 
-	return Factory->CreateAudioTrack(label, source);
+	return Factory->CreateAudioTrack(label, source.get());
 }
 
 // Video track creation.
-rtc::scoped_refptr<webrtc::VideoTrackInterface> createVideoTrack(const std::string& label)
+webrtc::scoped_refptr<webrtc::VideoTrackInterface> createVideoTrack(const std::string& label)
 {
 	if (!Factory)
 		createFactory();
 
-	return Factory->CreateVideoTrack(label, webrtc::FakeVideoTrackSource::Create());
+    webrtc::scoped_refptr<webrtc::FakeVideoTrackSource> source = webrtc::FakeVideoTrackSource::Create();
+
+    return Factory->CreateVideoTrack(source, label);
 }

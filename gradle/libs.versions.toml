@@ -2,26 +2,74 @@
 
 [plugins]
 
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version = "1.7.20" }
+android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 
-gradle = { id = "gradle", version = "7.3.1" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
+detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.7" }
+
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 
 [versions]
 
-kotlin = "1.7.20"
+android-gradle-plugin = "8.6.0"
+
+kotlin = "2.0.21"
+
+kotlinx-coroutines = "1.9.0"
+
+androidx-test-ext-junit = "1.2.1"
+
+androidx-test-ext-truth = "1.6.0"
+
+androidx-test-espresso = "3.6.1"
+
+androidx-test-runner = "1.6.2"
+
+androidx-test-rules = "1.6.1"
+
+kotest = "5.9.1"
+
+mockk = "1.13.13"
+
+truth = "1.4.4"
+
+dokka = "1.9.20"
 
 [libraries]
 
-dokka-gradle-plugin = "org.jetbrains.dokka:dokka-gradle-plugin:1.7.20"
+kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
 
-org-jacoco-ant = "org.jacoco:org.jacoco.ant:0.8.8"
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib" }
 
-assertk-jvm = "com.willowtreeapps.assertk:assertk-jvm:0.25"
+kotlinx-coroutines-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-bom", version.ref = "kotlinx-coroutines" }
 
-libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.4.0"
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android" }
 
-dokka-analysis = "org.jetbrains.dokka:dokka-analysis:1.7.20"
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test" }
 
-dokka-base = "org.jetbrains.dokka:dokka-base:1.7.20"
+libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.10.0"
 
-javadoc-plugin = "org.jetbrains.dokka:javadoc-plugin:1.7.20"
+androidx-test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-test-ext-junit" }
+
+androidx-test-ext-truth = { group = "androidx.test.ext", name = "truth", version.ref = "androidx-test-ext-truth" }
+
+androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
+
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
+
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test-rules" }
+
+kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
+
+kotest-assertions-core = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
+
+kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
+
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+
+dokka-javadoc-plugin = { group = "org.jetbrains.dokka", name = "javadoc-plugin", version.ref = "dokka" }

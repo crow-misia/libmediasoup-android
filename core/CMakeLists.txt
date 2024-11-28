@@ -62,7 +62,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 	"${SOURCE_DIR}/include"
 	"${LIBMEDIASOUPCLIENT_ROOT_PATH}/include"
 	"${LIBMEDIASOUPCLIENT_ROOT_PATH}/test/include"
-	"${LIBMEDIASOUPCLIENT_ROOT_PATH}/deps/libsdptransform/include"
 	"${LIBWEBRTC_INCLUDE_PATH}"
 	"${LIBWEBRTC_INCLUDE_PATH}/third_party/abseil-cpp"
 )

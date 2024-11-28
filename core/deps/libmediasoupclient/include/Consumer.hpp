@@ -36,8 +36,8 @@ namespace mediasoupclient
 		  const std::string& id,
 		  const std::string& localId,
 		  const std::string& producerId,
-		  webrtc::RtpReceiverInterface* rtpReceiver,
-		  webrtc::MediaStreamTrackInterface* track,
+		  webrtc::scoped_refptr<webrtc::RtpReceiverInterface> rtpReceiver,
+		  webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
 		  const nlohmann::json& rtpParameters,
 		  const nlohmann::json& appData);
 
@@ -77,9 +77,9 @@ namespace mediasoupclient
 		// Closed flag.
 		bool closed{ false };
 		// Associated RTCRtpReceiver.
-		webrtc::RtpReceiverInterface* rtpReceiver{ nullptr };
+		webrtc::scoped_refptr<webrtc::RtpReceiverInterface> rtpReceiver{ nullptr };
 		// Local track.
-		webrtc::MediaStreamTrackInterface* track{ nullptr };
+		webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track{ nullptr };
 		// RTP parameters.
 		nlohmann::json rtpParameters;
 		// Paused flag.

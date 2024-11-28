@@ -179,7 +179,7 @@ extern "C"
     MSC_TRACE();
 
     handleNativeCrashNoReturn(env, [&]() {
-      auto track = reinterpret_cast<webrtc::MediaStreamTrackInterface *>(j_track);
+      auto track = webrtc::scoped_refptr(reinterpret_cast<webrtc::MediaStreamTrackInterface *>(j_track));
       getProducer(j_producer)->ReplaceTrack(track);
     });
   }
