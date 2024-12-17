@@ -29,14 +29,12 @@ group = Maven.groupId
 version = Maven.version
 
 android {
-    namespace = "io.github.crow_misia.mediasoup"
+    namespace = "live.videosdk.mediasoup"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 21
         consumerProguardFiles("consumer-proguard-rules.pro")
-        namespace = "live.videosdk.mediasoup"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         externalNativeBuild {
