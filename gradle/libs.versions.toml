@@ -4,39 +4,59 @@
 
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.7" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+
+dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
+
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
 [versions]
 
 android-gradle-plugin = "8.7.3"
 
-kotlin = "2.1.0"
-
-kotlinx-coroutines = "1.9.0"
+androidx-test-espresso = "3.6.1"
 
 androidx-test-ext-junit = "1.2.1"
 
 androidx-test-ext-truth = "1.6.0"
 
-androidx-test-espresso = "3.6.1"
+androidx-test-rules = "1.6.1"
 
 androidx-test-runner = "1.6.2"
 
-androidx-test-rules = "1.6.1"
+detekt = "1.23.7"
+
+dokka = "2.0.0"
 
 kotest = "5.9.1"
+
+kotlin = "2.1.0"
+
+kotlinx-coroutines = "1.9.0"
 
 mockk = "1.13.13"
 
 truth = "1.4.4"
 
-dokka = "2.0.0"
-
 [libraries]
+
+androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
+
+androidx-test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-test-ext-junit" }
+
+androidx-test-ext-truth = { group = "androidx.test.ext", name = "truth", version.ref = "androidx-test-ext-truth" }
+
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test-rules" }
+
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
+
+kotest-assertions-core = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
+
+kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
+
+kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
 
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
 
@@ -50,26 +70,8 @@ kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 
 libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.10.0"
 
-androidx-test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-test-ext-junit" }
-
-androidx-test-ext-truth = { group = "androidx.test.ext", name = "truth", version.ref = "androidx-test-ext-truth" }
-
-androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
-
-androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" }
-
-androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidx-test-rules" }
-
-kotest-runner-junit5 = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotest" }
-
-kotest-assertions-core = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotest" }
-
-kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotest" }
-
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
 
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
-
-dokka-javadoc-plugin = { group = "org.jetbrains.dokka", name = "javadoc-plugin", version.ref = "dokka" }
