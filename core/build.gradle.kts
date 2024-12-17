@@ -1,6 +1,14 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import java.net.URI
+import java.io.File
+import java.io.FileInputStream
+import java.util.*
+
+val prop = Properties().apply {
+    load(FileInputStream(File(rootProject.rootDir, "gradle.properties")))
+}
 
 plugins {
     alias(libs.plugins.android.library)
@@ -16,7 +24,7 @@ object Maven {
     const val artifactId = "libmediasoup-android"
     const val name = "libmediasoup-android"
     const val desc = "mediasoup client side library for Android"
-    const val version = "2.0"
+    const val version = "0.2-SNAPSHOT"
     const val siteUrl = "https://github.com/zujonow/libmediasoup-android"
     const val gitUrl = "https://github.com/zujonow/libmediasoup-android.git"
     const val githubRepo = "zujonow/libmediasoup-android"
@@ -180,6 +188,13 @@ val javadocJar by tasks.creating(Jar::class) {
     from(customDokkaTask.outputDirectory)
 }
 
+val sourcesJar by tasks.creating(Jar::class) {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Assembles sources JAR"
+    archiveClassifier.set("sources")
+    from(sourceSets.create("main").allSource)
+}
+
 afterEvaluate {
     publishing {
         publications {
@@ -196,6 +211,7 @@ afterEvaluate {
                     |    Version: $version
                 """.trimMargin())
 
+                artifact(sourcesJar)
                 artifact(javadocJar)
 
                 pom {
@@ -230,20 +246,28 @@ afterEvaluate {
         }
         repositories {
             maven {
-                val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-                val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots")
+                val releasesRepoUrl = URI("https://s01.oss.sonatype.org/content/repositories/releases/")
+                val snapshotsRepoUrl = URI("https://s01.oss.sonatype.org/content/repositories/snapshots/")
                 url = if (Maven.version.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-
+                val ossrhUsername: String = prop.getProperty("ossrhUsername")
+                val ossrhPassword: String = prop.getProperty("ossrhPassword")
                 credentials {
-                    username = project.findProperty("sona.user") as String? ?: providers.environmentVariable("SONA_USER").orNull
-                    password = project.findProperty("sona.password") as String? ?: providers.environmentVariable("SONA_PASSWORD").orNull
+                    username = ossrhUsername.orEmpty()
+                    password = ossrhPassword.orEmpty()
                 }
             }
         }
     }
 
     signing {
-        useGpgCmd()
+        val keyId: String = prop.getProperty("signing.keyId")
+        val key: String = prop.getProperty("signing.key")
+        val password: String = prop.getProperty("signing.password")
+        useInMemoryPgpKeys(
+            keyId.orEmpty(),
+            key.orEmpty(),
+            password.orEmpty(),
+        )
         sign(publishing.publications)
     }
 }
