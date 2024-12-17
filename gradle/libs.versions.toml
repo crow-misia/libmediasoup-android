@@ -34,7 +34,7 @@ mockk = "1.13.13"
 
 truth = "1.4.4"
 
-dokka = "1.9.20"
+dokka = "2.0.0"
 
 [libraries]
 
