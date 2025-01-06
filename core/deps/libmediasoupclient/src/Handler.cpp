@@ -8,9 +8,7 @@
 #include "scalabilityMode.hpp"
 #include "sdptransform.hpp"
 #include "sdp/Utils.hpp"
-#include "absl/strings/str_format.h"
 #include <cinttypes> // PRIu64, etc
-#include <android/log.h>
 
 using json = nlohmann::json;
 
@@ -86,6 +84,9 @@ namespace mediasoupclient
 	void Handler::Close()
 	{
 		MSC_TRACE();
+
+		// Clear the stored transceivers before closing the PeerConnection.
+		this->mapMidTransceiver.clear();
 
 		this->pc->Close();
 	};
@@ -170,7 +171,7 @@ namespace mediasoupclient
 	};
 
 	SendHandler::SendResult SendHandler::Send(
-	  rtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
+	  webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
 	  std::vector<webrtc::RtpEncodingParameters>* encodings,
 	  const json* codecOptions,
 	  const json* codec)
@@ -208,23 +209,14 @@ namespace mediasoupclient
 		webrtc::RtpTransceiverInit transceiverInit;
 		transceiverInit.direction = webrtc::RtpTransceiverDirection::kSendOnly;
 
-		if (encodings && !encodings->empty()) {
-			__android_log_print(ANDROID_LOG_ERROR, "encodings", "%s","hi");
+		if (encodings && !encodings->empty())
 			transceiverInit.send_encodings = *encodings;
-		}
 
-		for(webrtc::RtpEncodingParameters e: transceiverInit.send_encodings)
-		{
-			__android_log_print(ANDROID_LOG_ERROR, "encodings", "%s",e.rid.c_str());
-			__android_log_print(ANDROID_LOG_ERROR, "encodings scale_resolution_down_by", "%s",absl::StrFormat("%f", e.scale_resolution_down_by.value()).c_str());
-		}
+		webrtc::scoped_refptr<webrtc::RtpTransceiverInterface> transceiver = this->pc->AddTransceiver(track, transceiverInit);
 
+		if (!transceiver)
+			MSC_THROW_ERROR("error creating transceiver");
 
-			webrtc::RtpTransceiverInterface *transceiver = this->pc->AddTransceiver(track,
-																					transceiverInit);
-
-			if (!transceiver)
-				MSC_THROW_ERROR("error creating transceiver");
 		std::string offer;
 		std::string localId;
 
@@ -405,7 +397,7 @@ namespace mediasoupclient
 		// This will fill sctpStreamParameters's missing fields with default values.
 		ortc::validateSctpStreamParameters(sctpStreamParameters);
 
-		rtc::scoped_refptr<webrtc::DataChannelInterface> webrtcDataChannel =
+		webrtc::scoped_refptr<webrtc::DataChannelInterface> webrtcDataChannel =
 		  this->pc->CreateDataChannel(label, &dataChannelInit);
 
 		// Increase next id.
@@ -469,7 +461,7 @@ namespace mediasoupclient
 		if (locaIdIt == this->mapMidTransceiver.end())
 			MSC_THROW_ERROR("associated RtpTransceiver not found");
 
-		auto* transceiver = locaIdIt->second;
+		auto transceiver = locaIdIt->second;
 
 		transceiver->sender()->SetTrack(nullptr);
 		this->pc->RemoveTrack(transceiver->sender());
@@ -494,7 +486,7 @@ namespace mediasoupclient
 		this->pc->SetRemoteDescription(PeerConnection::SdpType::ANSWER, answer);
 	}
 
-	void SendHandler::ReplaceTrack(const std::string& localId, webrtc::MediaStreamTrackInterface* track)
+	void SendHandler::ReplaceTrack(const std::string& localId, webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track)
 	{
 		MSC_TRACE();
 
@@ -508,9 +500,9 @@ namespace mediasoupclient
 		if (localIdIt == this->mapMidTransceiver.end())
 			MSC_THROW_ERROR("associated RtpTransceiver not found");
 
-		auto* transceiver = localIdIt->second;
+		auto transceiver = localIdIt->second;
 
-		transceiver->sender()->SetTrack(track);
+		transceiver->sender()->SetTrack(track.get());
 	}
 
 	void SendHandler::SetMaxSpatialLayer(const std::string& localId, uint8_t spatialLayer)
@@ -524,7 +516,7 @@ namespace mediasoupclient
 		if (localIdIt == this->mapMidTransceiver.end())
 			MSC_THROW_ERROR("associated RtpTransceiver not found");
 
-		auto* transceiver = localIdIt->second;
+		auto transceiver = localIdIt->second;
 		auto parameters   = transceiver->sender()->GetParameters();
 
 		bool hasLowEncoding{ false };
@@ -591,7 +583,7 @@ namespace mediasoupclient
 		if (localIdIt == this->mapMidTransceiver.end())
 			MSC_THROW_ERROR("associated RtpTransceiver not found");
 
-		auto* transceiver = localIdIt->second;
+		auto transceiver = localIdIt->second;
 		auto stats        = this->pc->GetStats(transceiver->sender());
 
 		return stats;
@@ -698,7 +690,7 @@ namespace mediasoupclient
 
 		auto transceivers  = this->pc->GetTransceivers();
 		auto transceiverIt = std::find_if(
-		  transceivers.begin(), transceivers.end(), [&localId](webrtc::RtpTransceiverInterface* t) {
+		  transceivers.begin(), transceivers.end(), [&localId](rtc::scoped_refptr<webrtc::RtpTransceiverInterface> t) {
 			  return t->mid() == localId;
 		  });
 
@@ -737,7 +729,7 @@ namespace mediasoupclient
 		// This will fill sctpStreamParameters's missing fields with default values.
 		ortc::validateSctpStreamParameters(sctpStreamParameters);
 
-		rtc::scoped_refptr<webrtc::DataChannelInterface> webrtcDataChannel =
+		webrtc::scoped_refptr<webrtc::DataChannelInterface> webrtcDataChannel =
 		  this->pc->CreateDataChannel(label, &dataChannelInit);
 
 		// If this is the first DataChannel we need to create the SDP answer with
@@ -789,7 +781,7 @@ namespace mediasoupclient
 		if (localIdIt == this->mapMidTransceiver.end())
 			MSC_THROW_ERROR("associated RtpTransceiver not found");
 
-		auto& transceiver = localIdIt->second;
+		auto transceiver = localIdIt->second;
 
 		MSC_DEBUG("disabling mid:%s", transceiver->mid().value().c_str());
 
@@ -824,7 +816,7 @@ namespace mediasoupclient
 		if (localIdIt == this->mapMidTransceiver.end())
 			MSC_THROW_ERROR("associated RtpTransceiver not found");
 
-		auto& transceiver = localIdIt->second;
+		auto transceiver = localIdIt->second;
 
 		// May throw.
 		auto stats = this->pc->GetStats(transceiver->receiver());

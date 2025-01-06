@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>LongParameterList:Device.kt$Device$( listener: RecvTransport.Listener, id: String, iceParameters: String, iceCandidates: String, dtlsParameters: String, sctpParameters: String? = null, rtcConfig: PeerConnection.RTCConfiguration? = null, appData: String? = null, )</ID>
+    <ID>LongParameterList:Device.kt$Device$( listener: SendTransport.Listener, id: String, iceParameters: String, iceCandidates: String, dtlsParameters: String, sctpParameters: String? = null, rtcConfig: PeerConnection.RTCConfiguration? = null, appData: String? = null, )</ID>
+    <ID>LongParameterList:Device.kt$Device$( nativeDevice: Long, listener: RecvTransport.Listener, id: String, iceParameters: String, iceCandidates: String, dtlsParameters: String, sctpParameters: String?, rtcConfig: PeerConnection.RTCConfiguration?, peerConnectionFactory: Long, appData: String?, )</ID>
+    <ID>LongParameterList:Device.kt$Device$( nativeDevice: Long, listener: SendTransport.Listener, id: String, iceParameters: String, iceCandidates: String, dtlsParameters: String, sctpParameters: String?, rtcConfig: PeerConnection.RTCConfiguration?, peerConnectionFactory: Long, appData: String?, )</ID>
+    <ID>LongParameterList:MediasoupClient.kt$MediasoupClient$( context: Application, logHandler: LogHandler, useTracer: Boolean = false, fieldTrials: String? = null, loggableSeverity: Logging.Severity = Logging.Severity.LS_NONE, nativeLibraryName: String = "mediasoupclient_so", )</ID>
+    <ID>LongParameterList:RecvTransport.kt$RecvTransport$( listener: Consumer.Listener, id: String, producerId: String, kind: String, rtpParameters: String? = null, appData: String? = null, )</ID>
+    <ID>LongParameterList:RecvTransport.kt$RecvTransport$( listener: DataConsumer.Listener, id: String, producerId: String, streamId: Int, label: String, protocol: String = "", appData: String? = null, )</ID>
+    <ID>LongParameterList:RecvTransport.kt$RecvTransport$( nativeTransport: Long, listener: Consumer.Listener, id: String, producerId: String, kind: String, rtpParameters: String?, appData: String?, )</ID>
+    <ID>LongParameterList:RecvTransport.kt$RecvTransport$( nativeTransport: Long, listener: DataConsumer.Listener, id: String, producerId: String, streamId: Int, label: String, protocol: String, appData: String?, )</ID>
+    <ID>LongParameterList:SendTransport.kt$SendTransport$( listener: DataProducer.Listener, label: String = "", protocol: String = "", ordered: Boolean = true, maxRetransmits: Int = 0, maxPacketLifeTime: Int = 0, appData: String? = null, )</ID>
+    <ID>LongParameterList:SendTransport.kt$SendTransport$( transport: Long, listener: DataProducer.Listener, label: String, protocol: String, ordered: Boolean, maxRetransmits: Int, maxPacketLifeTime: Int, appData: String?, )</ID>
+    <ID>LongParameterList:SendTransport.kt$SendTransport$( transport: Long, listener: Producer.Listener, track: Long, encodings: Array&lt;RtpParameters.Encoding>, codecOptions: String?, appData: String?, )</ID>
+    <ID>MagicNumber:Logger.kt$Logger.LogLevel.LOG_DEBUG$3</ID>
+    <ID>MagicNumber:Logger.kt$Logger.LogLevel.LOG_TRACE$4</ID>
+    <ID>UnusedPrivateMember:DataProducer.kt$DataProducer$private external fun nativeGetBufferedAmount(nativeDataProducer: Long): Long</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -48,7 +48,41 @@ namespace mediasoupclient
 			void OnInterestingUsage(int usagePattern) override;
 		};
 
-		class SetSessionDescriptionObserver : public webrtc::SetSessionDescriptionObserver
+        class SetLocalDescriptionObserver : public webrtc::SetLocalDescriptionObserverInterface
+        {
+        public:
+            SetLocalDescriptionObserver()           = default;
+            ~SetLocalDescriptionObserver() override = default;
+
+            std::future<void> GetFuture();
+            void Reject(const std::string& error);
+
+            /* Virtual methods inherited from webrtc::SetLocalDescriptionObserver. */
+        public:
+            void OnSetLocalDescriptionComplete(webrtc::RTCError error) override;
+
+        private:
+            std::promise<void> promise;
+        };
+
+        class SetRemoteDescriptionObserver : public webrtc::SetRemoteDescriptionObserverInterface
+        {
+        public:
+            SetRemoteDescriptionObserver()           = default;
+            ~SetRemoteDescriptionObserver() override = default;
+
+            std::future<void> GetFuture();
+            void Reject(const std::string& error);
+
+            /* Virtual methods inherited from webrtc::SetRemoteDescriptionObserver. */
+        public:
+            void OnSetRemoteDescriptionComplete(webrtc::RTCError error) override;
+
+        private:
+            std::promise<void> promise;
+        };
+
+        class SetSessionDescriptionObserver : public webrtc::SetSessionDescriptionObserver
 		{
 		public:
 			SetSessionDescriptionObserver()           = default;
@@ -121,16 +155,16 @@ namespace mediasoupclient
 		const std::string GetLocalDescription();
 		const std::string GetRemoteDescription();
 		std::vector<rtc::scoped_refptr<webrtc::RtpTransceiverInterface>> GetTransceivers() const;
-		rtc::scoped_refptr<webrtc::RtpTransceiverInterface> AddTransceiver(cricket::MediaType mediaType);
+		webrtc::scoped_refptr<webrtc::RtpTransceiverInterface> AddTransceiver(cricket::MediaType mediaType);
 		rtc::scoped_refptr<webrtc::RtpTransceiverInterface> AddTransceiver(
-		  rtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
+		  webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
 		  webrtc::RtpTransceiverInit rtpTransceiverInit);
-		std::vector<rtc::scoped_refptr<webrtc::RtpSenderInterface>> GetSenders();
-		webrtc::RTCError RemoveTrack(rtc::scoped_refptr<webrtc::RtpSenderInterface> sender);
+		std::vector<webrtc::scoped_refptr<webrtc::RtpSenderInterface>> GetSenders();
+		webrtc::RTCError RemoveTrack(webrtc::scoped_refptr<webrtc::RtpSenderInterface> sender);
 		nlohmann::json GetStats();
-		nlohmann::json GetStats(rtc::scoped_refptr<webrtc::RtpSenderInterface> selector);
-		nlohmann::json GetStats(rtc::scoped_refptr<webrtc::RtpReceiverInterface> selector);
-		rtc::scoped_refptr<webrtc::DataChannelInterface> CreateDataChannel(
+		nlohmann::json GetStats(webrtc::scoped_refptr<webrtc::RtpSenderInterface> selector);
+		nlohmann::json GetStats(webrtc::scoped_refptr<webrtc::RtpReceiverInterface> selector);
+		webrtc::scoped_refptr<webrtc::DataChannelInterface> CreateDataChannel(
 		  const std::string& label, const webrtc::DataChannelInit* config);
 
 	private:
@@ -140,10 +174,10 @@ namespace mediasoupclient
 		std::unique_ptr<rtc::Thread> workerThread;
 
 		// PeerConnection factory.
-		rtc::scoped_refptr<webrtc::PeerConnectionFactoryInterface> peerConnectionFactory;
+		webrtc::scoped_refptr<webrtc::PeerConnectionFactoryInterface> peerConnectionFactory;
 
 		// PeerConnection instance.
-		rtc::scoped_refptr<webrtc::PeerConnectionInterface> pc;
+		webrtc::scoped_refptr<webrtc::PeerConnectionInterface> pc;
 	};
 } // namespace mediasoupclient
 

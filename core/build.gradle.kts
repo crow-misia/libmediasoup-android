@@ -1,19 +1,22 @@
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.net.URI
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
 val prop = Properties().apply {
-    load(FileInputStream(File(rootProject.rootDir, "local.properties")))
+    load(FileInputStream(File(rootProject.rootDir, "gradle.properties")))
 }
 
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
-    id("org.jetbrains.dokka")
-    id("maven-publish")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.kotlin.android)
     id("signing")
+    id("maven-publish")
 }
 
 object Maven {
@@ -21,7 +24,7 @@ object Maven {
     const val artifactId = "libmediasoup-android"
     const val name = "libmediasoup-android"
     const val desc = "mediasoup client side library for Android"
-    const val version = "1.0"
+    const val version = "2.0"
     const val siteUrl = "https://github.com/zujonow/libmediasoup-android"
     const val gitUrl = "https://github.com/zujonow/libmediasoup-android.git"
     const val githubRepo = "zujonow/libmediasoup-android"
@@ -34,22 +37,20 @@ group = Maven.groupId
 version = Maven.version
 
 android {
-    buildToolsVersion = "33.0.1"
-    compileSdk = 33
+    namespace = "live.videosdk.mediasoup"
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 21
         consumerProguardFiles("consumer-proguard-rules.pro")
-        namespace = "live.videosdk.mediasoup"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         externalNativeBuild {
             cmake {
                 arguments += listOf(
-                    "-DLIBWEBRTC_INCLUDE_PATH=${projectDir}/deps/webrtc/include",
-                    "-DLIBWEBRTC_BINARY_ANDROID_PATH=${projectDir}/deps/webrtc/lib",
-                    "-DLIBMEDIASOUPCLIENT_ROOT_PATH=${projectDir}/deps/libmediasoupclient",
+                    "-DLIBWEBRTC_INCLUDE_PATH=${projectDir.resolve("deps/webrtc/include")}",
+                    "-DLIBWEBRTC_BINARY_ANDROID_PATH=${projectDir.resolve("deps/webrtc/lib")}",
+                    "-DLIBMEDIASOUPCLIENT_ROOT_PATH=${projectDir.resolve("deps/libmediasoupclient")}",
                     "-DMEDIASOUPCLIENT_BUILD_TESTS=OFF"
                 )
             }
@@ -57,17 +58,6 @@ android {
 
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
-        }
-    }
-
-    lint {
-        textReport = true
-        checkDependencies = true
-    }
-
-    libraryVariants.all {
-        generateBuildConfigProvider?.configure {
-            enabled = false
         }
     }
 
@@ -96,47 +86,87 @@ android {
         }
     }
 
+    lint {
+        textReport = true
+        checkDependencies = true
+        baseline = file("lint-baseline.xml")
+        disable.add("ChromeOsAbiSupport")
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+        unitTests.all {
+            it.useJUnitPlatform()
+            it.testLogging {
+                showStandardStreams = true
+                events("passed", "skipped", "failed")
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility(JavaVersion.VERSION_11)
         targetCompatibility(JavaVersion.VERSION_11)
     }
 
-    kotlin {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict", "-module-name", "libmediasoup-android")
-            jvmTarget = "11"
-            apiVersion = "1.7"
-            languageVersion = "1.7"
+    packaging {
+        resources {
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+            excludes.add("/META-INF/LICENSE*")
         }
     }
 
     externalNativeBuild {
         cmake {
             version = "3.22.1"
-            path = file("${projectDir}/CMakeLists.txt")
+            path = projectDir.resolve("CMakeLists.txt")
         }
     }
-    ndkVersion = "25.1.8937393"
+    ndkVersion = "26.1.10909125"
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict")
+        javaParameters.set(true)
+        jvmTarget.set(JvmTarget.JVM_11)
+        apiVersion.set(KotlinVersion.KOTLIN_1_7)
+        languageVersion.set(KotlinVersion.KOTLIN_1_7)
+    }
 }
 
 dependencies {
-    api(Kotlin.stdlib)
-    implementation(fileTree(mapOf("dir" to "${projectDir}/deps/webrtc/lib", "include" to arrayOf("*.jar"))))
-    api(libs.libwebrtc.ktx)
+    implementation(fileTree(mapOf("dir" to projectDir.resolve("deps/webrtc/lib"), "include" to arrayOf("*.jar"))))
 
-    testImplementation(Testing.junit4)
-    testImplementation(libs.assertk.jvm)
-    androidTestImplementation(Testing.junit4)
-    androidTestImplementation(AndroidX.test.ext.junit.ktx)
-    androidTestImplementation(AndroidX.test.espresso.core)
-    androidTestImplementation(libs.assertk.jvm)
-}
+    implementation(platform(libs.kotlin.bom))
+    implementation(libs.kotlin.stdlib)
+    implementation(platform(libs.kotlinx.coroutines.bom))
+    implementation(libs.kotlinx.coroutines.android)
 
-val sourcesJar by tasks.creating(Jar::class) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Assembles sources JAR"
-    archiveClassifier.set("sources")
-    from(sourceSets.create("main").allSource)
+    implementation(libs.libwebrtc.ktx)
+
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.kotest.property)
+    testImplementation(libs.mockk)
+
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
+    androidTestImplementation(libs.androidx.test.ext.truth)
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.truth)
 }
 
 val customDokkaTask by tasks.creating(DokkaTask::class) {
@@ -144,10 +174,10 @@ val customDokkaTask by tasks.creating(DokkaTask::class) {
         noAndroidSdkLink.set(false)
     }
     dependencies {
-        plugins(libs.javadoc.plugin)
+        plugins(libs.dokka.javadoc.plugin)
     }
     inputs.dir("src/main/java")
-    outputDirectory.set(buildDir.resolve("javadoc"))
+    outputDirectory.set(layout.buildDirectory.dir("javadoc"))
 }
 
 val javadocJar by tasks.creating(Jar::class) {
@@ -157,6 +187,13 @@ val javadocJar by tasks.creating(Jar::class) {
     archiveClassifier.set("javadoc")
     from(customDokkaTask.outputDirectory)
 }
+
+//val sourcesJar by tasks.creating(Jar::class) {
+//    group = JavaBasePlugin.DOCUMENTATION_GROUP
+//    description = "Assembles sources JAR"
+//    archiveClassifier.set("sources")
+//    from(sourceSets.create("main").allSource)
+//}
 
 afterEvaluate {
     publishing {
@@ -174,7 +211,7 @@ afterEvaluate {
                     |    Version: $version
                 """.trimMargin())
 
-                artifact(sourcesJar)
+//                artifact(sourcesJar)
                 artifact(javadocJar)
 
                 pom {
@@ -223,9 +260,9 @@ afterEvaluate {
     }
 
     signing {
-        val keyId: String = prop.getProperty("keyId")
-        val key: String = prop.getProperty("key")
-        val password: String = prop.getProperty("password")
+        val keyId: String = prop.getProperty("signing.keyId")
+        val key: String = prop.getProperty("signing.key")
+        val password: String = prop.getProperty("signing.password")
         useInMemoryPgpKeys(
             keyId.orEmpty(),
             key.orEmpty(),
@@ -235,12 +272,10 @@ afterEvaluate {
     }
 }
 
-tasks {
-    withType<Test> {
-        useJUnitPlatform()
-        testLogging {
-            showStandardStreams = true
-            events("passed", "skipped", "failed")
-        }
-    }
+detekt {
+    parallel = true
+    buildUponDefaultConfig = true
+    allRules = false
+    autoCorrect = true
+    config.setFrom(files("$rootDir/config/detekt.yml"))
 }

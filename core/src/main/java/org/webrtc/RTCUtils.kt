@@ -1,7 +1,6 @@
 package org.webrtc
 
-class RTCUtils {
-    companion object {
+object RTCUtils {
         fun createMediaStreamTrack(track: Long): MediaStreamTrack {
             return checkNotNull(MediaStreamTrack.createMediaStreamTrack(track)) { "nativeTrack may not be null" }
         }
@@ -37,5 +36,4 @@ class RTCUtils {
                 adaptiveAudioPacketTime!!
             )
         }
-    }
 }

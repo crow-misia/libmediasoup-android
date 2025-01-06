@@ -29,6 +29,7 @@ namespace mediasoupclient
 		class Listener
 		{
 		public:
+			virtual ~Listener() = default;
 			virtual std::future<void> OnConnect(Transport* transport, const nlohmann::json& dtlsParameters) = 0;
 			virtual void OnConnectionStateChange(Transport* transport, const std::string& connectionState) = 0;
 		};
@@ -42,6 +43,7 @@ namespace mediasoupclient
 		  const nlohmann::json& appData);
 
 	public:
+		virtual ~Transport() = default;
 		const std::string& GetId() const;
 		bool IsClosed() const;
 		const std::string& GetConnectionState() const;
@@ -152,7 +154,7 @@ namespace mediasoupclient
 	public:
 		void OnClose(Producer* producer) override;
 		void OnClose(DataProducer* dataProducer) override;
-		void OnReplaceTrack(const Producer* producer, webrtc::MediaStreamTrackInterface* track) override;
+		void OnReplaceTrack(const Producer* producer, webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track) override;
 		void OnSetMaxSpatialLayer(const Producer* producer, uint8_t maxSpatialLayer) override;
 		nlohmann::json OnGetStats(const Producer* producer) override;
 

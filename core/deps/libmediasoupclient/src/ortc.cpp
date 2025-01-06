@@ -1208,7 +1208,7 @@ namespace mediasoupclient
 
 		/**
 		 * Generate RTP parameters of the given kind for sending media.
-		 * Just the first media codec per kind is considered.
+		 * All media codecs with matching kind are considered.
 		 * NOTE: mid, encodings and rtcp fields are left empty.
 		 */
 		json getSendingRtpParameters(const std::string& kind, const json& extendedRtpCapabilities)
@@ -1270,9 +1270,6 @@ namespace mediasoupclient
 
 					rtpParameters["codecs"].push_back(rtxCodec);
 				}
-
-				// NOTE: We assume a single media codec plus an optional RTX codec.
-				break;
 			}
 
 			for (const auto& extendedExtension : extendedRtpCapabilities["headerExtensions"])
@@ -1364,9 +1361,6 @@ namespace mediasoupclient
 
 					rtpParameters["codecs"].push_back(rtxCodec);
 				}
-
-				// NOTE: We assume a single media codec plus an optional RTX codec.
-				break;
 			}
 
 			for (const auto& extendedExtension : extendedRtpCapabilities["headerExtensions"])
@@ -1651,8 +1645,8 @@ static bool matchCodecs(json& aCodec, json& bCodec, bool strict, bool modify)
 			if (aPacketizationMode != bPacketizationMode)
 				return false;
 
-			cricket::CodecParameterMap aParameters;
-			cricket::CodecParameterMap bParameters;
+			webrtc::CodecParameterMap aParameters;
+			webrtc::CodecParameterMap bParameters;
 
 			aParameters["level-asymmetry-allowed"] = std::to_string(getH264LevelAssimetryAllowed(aCodec));
 			aParameters["packetization-mode"]      = std::to_string(aPacketizationMode);
@@ -1664,7 +1658,7 @@ static bool matchCodecs(json& aCodec, json& bCodec, bool strict, bool modify)
 			if (!webrtc::H264IsSameProfile(aParameters, bParameters))
 				return false;
 
-			cricket::CodecParameterMap newParameters;
+			webrtc::CodecParameterMap newParameters;
 
 			try
 			{

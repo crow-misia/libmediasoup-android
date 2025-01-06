@@ -20,7 +20,7 @@ namespace mediasoupclient
 		public:
 			virtual void OnClose(Producer* producer) = 0;
 			virtual void OnReplaceTrack(
-			  const Producer* producer, webrtc::MediaStreamTrackInterface* newTrack)             = 0;
+			  const Producer* producer, webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> newTrack) = 0;
 			virtual void OnSetMaxSpatialLayer(const Producer* producer, uint8_t maxSpatialLayer) = 0;
 			virtual nlohmann::json OnGetStats(const Producer* producer)                          = 0;
 		};
@@ -38,8 +38,8 @@ namespace mediasoupclient
 		  Listener* listener,
 		  const std::string& id,
 		  const std::string& localId,
-		  webrtc::RtpSenderInterface* rtpSender,
-		  webrtc::MediaStreamTrackInterface* track,
+		  webrtc::scoped_refptr<webrtc::RtpSenderInterface> rtpSender,
+		  webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track,
 		  const nlohmann::json& rtpParameters,
 		  const nlohmann::json& appData);
 
@@ -58,7 +58,7 @@ namespace mediasoupclient
 		nlohmann::json GetStats() const;
 		void Pause();
 		void Resume();
-		void ReplaceTrack(webrtc::MediaStreamTrackInterface* track);
+		void ReplaceTrack(webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track);
 		void SetMaxSpatialLayer(uint8_t spatialLayer);
 
 	private:
@@ -79,9 +79,9 @@ namespace mediasoupclient
 		// Closed flag.
 		bool closed{ false };
 		// Associated RTCRtpSender.
-		webrtc::RtpSenderInterface* rtpSender{ nullptr };
+		webrtc::scoped_refptr<webrtc::RtpSenderInterface> rtpSender{ nullptr };
 		// Local track.
-		webrtc::MediaStreamTrackInterface* track{ nullptr };
+		webrtc::scoped_refptr<webrtc::MediaStreamTrackInterface> track{ nullptr };
 		// RTP parameters.
 		nlohmann::json rtpParameters;
 		// Paused flag.
