@@ -24,7 +24,7 @@ object Maven {
     const val artifactId = "libmediasoup-android"
     const val name = "libmediasoup-android"
     const val desc = "mediasoup client side library for Android"
-    const val version = "0.2-SNAPSHOT"
+    const val version = "2.0"
     const val siteUrl = "https://github.com/zujonow/libmediasoup-android"
     const val gitUrl = "https://github.com/zujonow/libmediasoup-android.git"
     const val githubRepo = "zujonow/libmediasoup-android"
@@ -138,8 +138,8 @@ kotlin {
         freeCompilerArgs.addAll("-Xjsr305=strict")
         javaParameters.set(true)
         jvmTarget.set(JvmTarget.JVM_11)
-        apiVersion.set(KotlinVersion.KOTLIN_2_1)
-        languageVersion.set(KotlinVersion.KOTLIN_2_1)
+        apiVersion.set(KotlinVersion.KOTLIN_1_7)
+        languageVersion.set(KotlinVersion.KOTLIN_1_7)
     }
 }
 
@@ -188,12 +188,12 @@ val javadocJar by tasks.creating(Jar::class) {
     from(customDokkaTask.outputDirectory)
 }
 
-val sourcesJar by tasks.creating(Jar::class) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Assembles sources JAR"
-    archiveClassifier.set("sources")
-    from(sourceSets.create("main").allSource)
-}
+//val sourcesJar by tasks.creating(Jar::class) {
+//    group = JavaBasePlugin.DOCUMENTATION_GROUP
+//    description = "Assembles sources JAR"
+//    archiveClassifier.set("sources")
+//    from(sourceSets.create("main").allSource)
+//}
 
 afterEvaluate {
     publishing {
@@ -211,7 +211,7 @@ afterEvaluate {
                     |    Version: $version
                 """.trimMargin())
 
-                artifact(sourcesJar)
+//                artifact(sourcesJar)
                 artifact(javadocJar)
 
                 pom {
