@@ -5,6 +5,54 @@
 
 mediasoup android client side library https://mediasoup.org
 
+## Build
+
+- Download dependencies files.
+
+```
+$ cd core/scripts
+$ ./get-deps.sh
+```
+
+## Publish
+
+Step 1 : Change the version in `build.gradle.kts(:core)` file.
+
+```
+const val version = "2.0"
+```
+
+- If you want to publish SNAPSHOT version, add prefix `SNAPSHOT`
+
+```
+const val version = "2.0-SNAPSHOT"
+```
+
+
+Step 2 : Publish it on MavenCenter using the below command.
+
+```
+./gradlew publish 
+```
+
+Step 3 : Add dependencies in other project.
+
+```
+allprojects {
+    repositories {
+        //...
+        maven {url "https://s01.oss.sonatype.org/content/repositories/releases/"}
+
+        // for snapshot
+        maven {url "https://s01.oss.sonatype.org/content/repositories/snapshots/"}
+    }
+}
+```
+
+```
+implementation("live.videosdk:libmediasoup-android:${latest_version}")
+```
+
 
 ## Get Started
 
