@@ -1,0 +1,17 @@
+[bumpver]
+current_version = "v0.16.0"
+version_pattern = "vMAJOR.MINOR.PATCH"
+commit_message = "chore: bump version {old_version_pep440} -> {new_version_pep440}"
+tag_message = "release {new_version_pep440}"
+tag_scope = "default"
+pre_commit_hook = ""
+post_commit_hook = ""
+commit = true
+tag = true
+push = false
+
+[bumpver.file_patterns]
+"buildSrc/src/main/java/Maven.kt" = [
+    'const val VERSION = "{pep440_version}"',
+]
+
