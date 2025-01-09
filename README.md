@@ -1,10 +1,10 @@
 # mediasoup client for android
 
-[![Android CI](https://github.com/crow-misia/libmediasoup-android/workflows/Android%20CI/badge.svg)](https://github.com/crow-misia/libmediasoup-android/actions)
-[![License](https://img.shields.io/github/license/crow-misia/libmediasoup-android)](LICENSE)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/crow-misia/libmediasoup-android/android.yml)](https://github.com/crow-misia/libmediasoup-android/actions/workflows/android.yml)
+[![Maven Central Version](https://img.shields.io/maven-central/v/io.github.crow-misia.libmediasoup-android/libmediasoup-android)](https://central.sonatype.com/artifact/io.github.crow-misia.libmediasoup-android/libmediasoup-android)
+[![GitHub License](https://img.shields.io/github/license/crow-misia/libmediasoup-android)](LICENSE)
 
 mediasoup android client side library https://mediasoup.org
-
 
 ## Get Started
 
@@ -12,7 +12,7 @@ mediasoup android client side library https://mediasoup.org
 
 Add dependencies (you can also add other modules that you need):
 
-`${latest.version}` is [![Maven Central](https://img.shields.io/maven-central/v/io.github.crow-misia.libmediasoup-android/libmediasoup-android.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.crow-misia.libmediasoup-android%22%20AND%20a:%22libmediasoup-android%22)
+`${latest.version}` is [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.crow-misia.libmediasoup-android/libmediasoup-android)](https://central.sonatype.com/artifact/io.github.crow-misia.libmediasoup-android/libmediasoup-android)
 
 ```groovy
 dependencies {
@@ -30,7 +30,7 @@ repository {
 
 ## Dependencies
 
-* [libwebrtc-ktx](https://github.com/crow-misia/libwebrtc-ktx)
+* [libmediasoup-android](https://github.com/crow-misia/libmediasoup-android)
 
 ## Demo project
 
