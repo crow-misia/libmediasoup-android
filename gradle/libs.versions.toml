@@ -16,7 +16,7 @@ maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publ
 
 [versions]
 
-android-gradle-plugin = "8.7.3"
+android-gradle-plugin = "8.8.0"
 
 androidx-test-espresso = "3.6.1"
 
@@ -72,7 +72,7 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test" }
 
-libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.10.0"
+libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.11.0"
 
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
