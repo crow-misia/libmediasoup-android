@@ -48,6 +48,7 @@ class SendTransport @CalledByNative private constructor(
         track: MediaStreamTrack,
         encodings: List<RtpParameters.Encoding> = emptyList(),
         codecOptions: String? = null,
+        codec: String? = null,
         appData: String? = null,
     ): Producer {
         checkTransportExists()
@@ -58,6 +59,7 @@ class SendTransport @CalledByNative private constructor(
             track = nativeTrack,
             encodings = encodings.toTypedArray(),
             codecOptions = codecOptions,
+            codec = codec,
             appData = appData,
         )
     }
@@ -98,6 +100,7 @@ class SendTransport @CalledByNative private constructor(
         track: Long,
         encodings: Array<RtpParameters.Encoding>,
         codecOptions: String?,
+        codec: String?,
         appData: String?,
     ): Producer
 
