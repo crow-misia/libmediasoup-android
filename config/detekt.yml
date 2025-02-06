@@ -4,6 +4,9 @@ build:
 complexity:
   TooManyFunctions:
     active: false
+  LongParameterList:
+    active: true
+    functionThreshold: 8
 
 style:
   WildcardImport:

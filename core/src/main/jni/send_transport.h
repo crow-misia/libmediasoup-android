@@ -17,7 +17,7 @@ namespace mediasoupclient
 
 extern "C"
 {
-  JNI_DEFINE_METHOD(jobject, SendTransport, nativeProduce, jlong j_transport, jobject j_listener, jlong j_track, jobjectArray j_encodings, jstring j_codecOptions, jstring j_appData);
+  JNI_DEFINE_METHOD(jobject, SendTransport, nativeProduce, jlong j_transport, jobject j_listener, jlong j_track, jobjectArray j_encodings, jstring j_codecOptions, jstring j_codec, jstring j_appData);
   JNI_DEFINE_METHOD(jobject, SendTransport, nativeProduceData, jlong j_transport, jobject j_listener, jstring j_label, jstring j_protocol, jboolean j_ordered, jint j_maxRetransmits,
                     jint j_maxPacketLifeTime, jstring j_appData);
 }

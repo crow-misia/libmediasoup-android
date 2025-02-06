@@ -6,16 +6,16 @@
 
 ## Prepare
 
-1. Editing VERSION file for specify the version of dependent libraries.
+1. Editing VERSIONS file for specify the version of dependent libraries.
 2. Download dependencies files.
 
 ```shell
-$ cd core/deps/scripts
+$ cd core/scripts
 $ ./get-deps.sh
 ```
 
 ## Building
 
 ```shell
-$ gradlew build
+$ ./gradlew build
 ```
