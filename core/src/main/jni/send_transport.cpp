@@ -49,7 +49,7 @@ extern "C"
                                {
                                  codecOptions = json::parse(JavaToNativeString(env, JavaParamRef<jstring>(env, j_codecOptions)));
                                }
-                               auto codec = json::object();
+                               json codec = nullptr;
                                if (j_codec != nullptr)
                                {
                                  codec = json::parse(JavaToNativeString(env, JavaParamRef<jstring>(env, j_codec)));
