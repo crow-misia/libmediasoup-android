@@ -1,6 +1,6 @@
 # mediasoup client for android
 
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/crow-misia/libmediasoup-android/android.yml)](https://github.com/crow-misia/libmediasoup-android/actions/workflows/android.yml)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/crow-misia/libmediasoup-android/build.yml)](https://github.com/crow-misia/libmediasoup-android/actions/workflows/build.yml)
 [![Maven Central Version](https://img.shields.io/maven-central/v/io.github.crow-misia.libmediasoup-android/libmediasoup-android)](https://central.sonatype.com/artifact/io.github.crow-misia.libmediasoup-android/libmediasoup-android)
 [![GitHub License](https://img.shields.io/github/license/crow-misia/libmediasoup-android)](LICENSE)
 
