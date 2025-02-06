@@ -69,7 +69,7 @@ inline int throwMediasoupException(JNIEnv *env, const char *message)
 }
 
 template <typename F>
-inline auto handleNativeCrash(JNIEnv *env, F f) noexcept -> absl::optional<decltype(f())>
+inline auto handleNativeCrash(JNIEnv *env, F f) noexcept -> std::optional<decltype(f())>
 {
   try
   {
