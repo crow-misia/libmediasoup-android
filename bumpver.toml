@@ -1,5 +1,5 @@
 [bumpver]
-current_version = "v0.17.0"
+current_version = "v0.18.0"
 version_pattern = "vMAJOR.MINOR.PATCH"
 commit_message = "chore: bump version {old_version_pep440} -> {new_version_pep440}"
 tag_message = "release {new_version_pep440}"
