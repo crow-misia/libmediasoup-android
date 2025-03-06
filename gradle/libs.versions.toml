@@ -38,7 +38,7 @@ kotlin = "2.1.10"
 
 kotlinx-coroutines = "1.10.1"
 
-maven-publish = "0.30.0"
+maven-publish = "0.31.0"
 
 mockk = "1.13.17"
 
