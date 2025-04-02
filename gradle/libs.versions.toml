@@ -72,7 +72,7 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test" }
 
-libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.11.0"
+libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.12.0"
 
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
