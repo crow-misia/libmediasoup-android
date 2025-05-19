@@ -49,6 +49,9 @@ google-services.json
 # Node.js
 node_modules/
 
+# lefthook
+lefthook-local.*
+
 # not ignore
 !.idea/codeStyleSettings.xml
 !.idea/findbugs-idea.xml
