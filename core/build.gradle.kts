@@ -1,5 +1,6 @@
 import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 import com.vanniktech.maven.publish.SonatypeHost
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -188,4 +189,17 @@ detekt {
     allRules = false
     autoCorrect = true
     config.from(rootDir.resolve("config/detekt.yml"))
+}
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = "11"
+    reports {
+        html.required = false
+        xml.required = false
+        txt.required = false
+        sarif.required = true
+        md.required = true
+    }
+    exclude("build/")
+    exclude("resources/")
 }
