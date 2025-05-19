@@ -29,6 +29,7 @@ android {
         externalNativeBuild {
             cmake {
                 arguments += listOf(
+                    "-DCMAKE_POLICY_VERSION_MINIMUM=3.10",
                     "-DLIBWEBRTC_INCLUDE_PATH=${projectDir.resolve("deps/webrtc/include")}",
                     "-DLIBWEBRTC_BINARY_ANDROID_PATH=${projectDir.resolve("deps/webrtc/lib")}",
                     "-DLIBMEDIASOUPCLIENT_ROOT_PATH=${projectDir.resolve("deps/libmediasoupclient")}",
@@ -101,7 +102,7 @@ android {
 
     externalNativeBuild {
         cmake {
-            version = "3.31.6"
+            version = "4.0.2"
             path = projectDir.resolve("CMakeLists.txt")
         }
     }
