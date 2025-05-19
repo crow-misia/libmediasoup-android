@@ -1,5 +1,6 @@
 import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 import com.vanniktech.maven.publish.SonatypeHost
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -100,11 +101,11 @@ android {
 
     externalNativeBuild {
         cmake {
-            version = "3.22.1"
+            version = "3.31.6"
             path = projectDir.resolve("CMakeLists.txt")
         }
     }
-    ndkVersion = "26.1.10909125"
+    ndkVersion = "28.1.13356709"
 }
 
 kotlin {
@@ -188,4 +189,17 @@ detekt {
     allRules = false
     autoCorrect = true
     config.from(rootDir.resolve("config/detekt.yml"))
+}
+
+tasks.withType<Detekt>().configureEach {
+    jvmTarget = "11"
+    reports {
+        html.required = false
+        xml.required = false
+        txt.required = false
+        sarif.required = true
+        md.required = true
+    }
+    exclude("build/")
+    exclude("resources/")
 }
