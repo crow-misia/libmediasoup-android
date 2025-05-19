@@ -100,11 +100,11 @@ android {
 
     externalNativeBuild {
         cmake {
-            version = "3.22.1"
+            version = "3.31.6"
             path = projectDir.resolve("CMakeLists.txt")
         }
     }
-    ndkVersion = "26.1.10909125"
+    ndkVersion = "28.1.13356709"
 }
 
 kotlin {
