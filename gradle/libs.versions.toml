@@ -26,9 +26,9 @@ kotlinx-coroutines = "1.10.2"
 
 libwebrtc-ktx = "1.12.0"
 
-maven-publish = "0.32.0"
+maven-publish = "0.33.0"
 
-mockk = "1.14.2"
+mockk = "1.14.4"
 
 truth = "1.4.4"
 
