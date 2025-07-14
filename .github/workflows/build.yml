@@ -6,27 +6,27 @@ on:
     branches: ['main']
     paths-ignore:
       - '.npmignore'
-      - '.husky/**'
       - '.idea/**'
       - '.vscode/**'
-      - '*.md'
       - 'LICENSE'
-      - 'NOTICE'
+      - '*.md'
       - 'bumpver.toml'
+      - 'commitlint.config.cjs'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
   pull_request:
     paths-ignore:
       - '.npmignore'
-      - '.husky/**'
       - '.idea/**'
       - '.vscode/**'
-      - '*.md'
       - 'LICENSE'
-      - 'NOTICE'
+      - '*.md'
       - 'bumpver.toml'
+      - 'commitlint.config.cjs'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
 
 permissions:
   contents: write
