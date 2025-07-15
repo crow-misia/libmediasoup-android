@@ -87,8 +87,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = Build.sourceCompatibility
-        targetCompatibility = Build.targetCompatibility
+        sourceCompatibility = Build.jvmTarget
+        targetCompatibility = Build.jvmTarget
     }
 
     packaging {
@@ -110,7 +110,7 @@ android {
 kotlin {
     compilerOptions {
         javaParameters = true
-        jvmTarget = JvmTarget.JVM_11
+        jvmTarget = JvmTarget.fromTarget(Build.jvmTarget.toString())
     }
 }
 
@@ -191,7 +191,7 @@ detekt {
 }
 
 tasks.withType<Detekt>().configureEach {
-    jvmTarget = "11"
+    jvmTarget = Build.jvmTarget.toString()
     reports {
         html.required = false
         xml.required = false
