@@ -6,24 +6,28 @@ on:
     branches: ['main']
     paths-ignore:
       - '.npmignore'
+      - '.npmrc'
       - '.idea/**'
       - '.vscode/**'
       - 'LICENSE'
       - '*.md'
       - 'bumpver.toml'
       - 'commitlint.config.cjs'
+      - 'lefthook.yaml'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
   pull_request:
     paths-ignore:
       - '.npmignore'
+      - '.npmrc'
       - '.idea/**'
       - '.vscode/**'
       - 'LICENSE'
       - '*.md'
       - 'bumpver.toml'
       - 'commitlint.config.cjs'
+      - 'lefthook.yaml'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
