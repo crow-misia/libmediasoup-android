@@ -28,7 +28,7 @@ libwebrtc-ktx = "1.12.0"
 
 maven-publish = "0.34.0"
 
-mockk = "1.14.4"
+mockk = "1.14.5"
 
 truth = "1.4.4"
 
