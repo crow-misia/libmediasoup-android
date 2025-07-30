@@ -48,7 +48,7 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test" }
 
-libwebrtc-ktx = "io.github.crow-misia.libwebrtc:libwebrtc-ktx:1.10.0"
+libwebrtc-ktx = "live.videosdk:libwebrtc-ktx:1.0.5"
 
 androidx-test-ext-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "androidx-test-ext-junit" }
 

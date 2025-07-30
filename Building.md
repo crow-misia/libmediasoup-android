@@ -10,12 +10,12 @@
 2. Download dependencies files.
 
 ```shell
-$ cd core/deps/scripts
+$ cd core/scripts
 $ ./get-deps.sh
 ```
 
 ## Building
 
 ```shell
-$ gradlew build
+$ ./gradlew build
 ```

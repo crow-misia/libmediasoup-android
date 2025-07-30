@@ -31,7 +31,7 @@ extern jmethodID sendTransportListenerOnProduceDataMethod;
 
 extern "C"
 {
-  JNI_DEFINE_METHOD(jobject, SendTransport, nativeProduce, jlong j_transport, jobject j_listener, jlong j_track, jobjectArray j_encodings, jstring j_codecOptions, jstring j_appData)
+  JNI_DEFINE_METHOD(jobject, SendTransport, nativeProduce, jlong j_transport, jobject j_listener, jlong j_track, jobjectArray j_encodings, jstring j_codecOptions, jstring j_codec, jstring j_appData)
   {
     MSC_TRACE();
 
@@ -49,13 +49,18 @@ extern "C"
                                {
                                  codecOptions = json::parse(JavaToNativeString(env, JavaParamRef<jstring>(env, j_codecOptions)));
                                }
+                               json codec = nullptr;
+                               if (j_codec != nullptr)
+                               {
+                                    codec = json::parse(JavaToNativeString(env, JavaParamRef<jstring>(env, j_codec)));
+                               }
                                json appData = nullptr;
                                if (j_appData != nullptr)
                                {
                                  appData = json::parse(JavaToNativeString(env, JavaParamRef<jstring>(env, j_appData)));
                                }
 
-                               auto producer = getSendTransport(j_transport)->Produce(listener, track, &encodings, &codecOptions, NULL, appData);
+                               auto producer = getSendTransport(j_transport)->Produce(listener, track, &encodings, &codecOptions, &codec, appData);
                                return NativeToJavaProducer(env, producer, listener).Release();
                              })
       .value_or(nullptr);

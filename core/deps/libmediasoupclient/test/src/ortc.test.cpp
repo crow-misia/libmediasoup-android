@@ -1,5 +1,6 @@
-#include "fakeParameters.hpp"
 #include "ortc.hpp"
+#include "MediaSoupClientErrors.hpp"
+#include "fakeParameters.hpp"
 #include <catch.hpp>
 
 using namespace mediasoupclient;
@@ -221,5 +222,59 @@ TEST_CASE("ortc::canReceive", "[ortc::canReceive]")
 		})"_json;
 
 		REQUIRE(!ortc::canReceive(rtpParameters, extendedRtpCapabilities));
+	}
+}
+
+TEST_CASE("ortc::reduceCodecs", "[ortc::reduceCodecs]")
+{
+	json caps = generateRouterRtpCapabilities();
+
+	SECTION("it can reduce codecs")
+	{
+		auto capCodec       = R"(
+		{
+			"mimeType"             : "video/H264",
+			"kind"                 : "video",
+			"clockRate"            : 90000,
+			"preferredPayloadType" : 103,
+			"rtcpFeedback"         :
+			[
+				{ "type": "nack" },
+				{ "type": "nack", "parameter": "pli"  },
+				{ "type": "nack", "parameter": "sli"  },
+				{ "type": "nack", "parameter": "rpsi" },
+				{ "type": "nack", "parameter": "app"  },
+				{ "type": "ccm",  "parameter": "fir"  },
+				{ "type": "goog-remb" }
+			],
+			"parameters" :
+			{
+				"level-asymmetry-allowed" : 1,
+				"packetization-mode"      : 1,
+				"profile-level-id"        : "42e01f"
+			}
+		})"_json;
+		json filteredCodecs = ortc::reduceCodecs(caps["codecs"], &capCodec);
+
+		REQUIRE(filteredCodecs[0]["mimeType"] == "video/H264");
+		REQUIRE(filteredCodecs[1]["mimeType"] == "video/rtx");
+	}
+
+	SECTION("it can return the first codec if no capability codec is given")
+	{
+		json capsCodec      = json::array();
+		json filteredCodecs = ortc::reduceCodecs(caps["codecs"], &capsCodec);
+
+		REQUIRE(filteredCodecs[0]["mimeType"] == "audio/opus");
+	}
+
+	SECTION("it throws if codecs doesn't contain a provided codec")
+	{
+		auto capCodec = R"(
+		{
+			"mimeType"             : "video/x-dummy"
+		})"_json;
+
+		REQUIRE_THROWS_AS(ortc::reduceCodecs(caps["codecs"], &capCodec), MediaSoupClientTypeError);
 	}
 }
