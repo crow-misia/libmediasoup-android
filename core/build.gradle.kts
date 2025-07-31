@@ -248,7 +248,7 @@ afterEvaluate {
         repositories {
 //            mavenLocal()
             maven {
-                val releasesRepoUrl = URI("https://ossrh-staging-api.central.sonatype.com/service/local/")
+                val releasesRepoUrl = URI("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
                 val snapshotsRepoUrl = URI("https://central.sonatype.com/repository/maven-snapshots/")
                 url = if (Maven.version.endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
                 val ossrhUsername: String = prop.getProperty("ossrhUsername")
