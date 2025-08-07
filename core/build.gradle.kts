@@ -24,7 +24,7 @@ object Maven {
     const val artifactId = "libmediasoup-android"
     const val name = "libmediasoup-android"
     const val desc = "mediasoup client side library for Android"
-    const val version = "3.0" // Update this version as needed
+    const val version = "3.1-SNAPSHOT" // Update this version as needed
     const val siteUrl = "https://github.com/zujonow/libmediasoup-android"
     const val gitUrl = "https://github.com/zujonow/libmediasoup-android.git"
     const val githubRepo = "zujonow/libmediasoup-android"
@@ -38,7 +38,7 @@ version = Maven.version
 
 android {
     namespace = "live.videosdk.mediasoup"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21
@@ -124,7 +124,7 @@ android {
             path = projectDir.resolve("CMakeLists.txt")
         }
     }
-    ndkVersion = "26.1.10909125"
+    ndkVersion = "28.1.13356709"
 
     publishing {
         singleVariant("release") {
