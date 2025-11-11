@@ -2,7 +2,7 @@
 
 [versions]
 
-android-gradle-plugin = "8.13.0"
+android-gradle-plugin = "8.13.1"
 
 androidx-test-espresso = "3.7.0"
 
