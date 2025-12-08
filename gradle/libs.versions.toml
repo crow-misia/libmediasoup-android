@@ -18,7 +18,7 @@ detekt = "1.23.8"
 
 dokka = "2.1.0"
 
-kotest = "6.0.5"
+kotest = "6.0.7"
 
 kotlin = "2.2.21"
 
