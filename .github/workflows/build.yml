@@ -4,36 +4,26 @@ on:
   workflow_dispatch:
   push:
     branches: ['main']
-    paths-ignore:
-      - '.npmignore'
-      - '.npmrc'
-      - '.idea/**'
-      - '.vscode/**'
-      - 'LICENSE'
-      - '*.md'
-      - 'bumpver.toml'
-      - 'commitlint.config.cjs'
-      - 'lefthook.yaml'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'pnpm-workspace.yaml'
+    paths:
+      - 'config/**'
+      - 'core/**'
+      - 'gradle/**'
+      - '*.gradle.kts'
+      - 'lint.xml'
   pull_request:
-    paths-ignore:
-      - '.npmignore'
-      - '.npmrc'
-      - '.idea/**'
-      - '.vscode/**'
-      - 'LICENSE'
-      - '*.md'
-      - 'bumpver.toml'
-      - 'commitlint.config.cjs'
-      - 'lefthook.yaml'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'pnpm-workspace.yaml'
+    paths:
+      - 'config/**'
+      - 'core/**'
+      - 'gradle/**'
+      - '*.gradle.kts'
+      - 'lint.xml'
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -57,10 +47,8 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java-version }}
 
-      - name: Setup Gradle to generate and submit dependency graphs
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@f29f5a9d7b09a7c6b29859002d29d24e1674c884 # v5.0.1
-        with:
-          dependency-graph: generate-and-submit
 
       - name: download dependencies
         run: ./core/scripts/get-deps.sh
