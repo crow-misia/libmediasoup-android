@@ -1,4 +1,6 @@
 import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.SourcesJar
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -149,8 +151,8 @@ signing {
 mavenPublishing {
     configure(AndroidSingleVariantLibrary(
         variant = "release",
-        publishJavadocJar = true,
-        sourcesJar = true,
+        javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationJavadoc"),
+        sourcesJar = SourcesJar.Sources(),
     ))
 
     publishToMavenCentral()
