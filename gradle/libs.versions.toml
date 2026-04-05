@@ -16,9 +16,9 @@ androidx-test-runner = "1.7.0"
 
 detekt = "1.23.8"
 
-dokka = "2.1.0"
+dokka = "2.2.0"
 
-kotest = "6.1.7"
+kotest = "6.1.9"
 
 kotlin = "2.3.20"
 
