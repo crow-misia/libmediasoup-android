@@ -22,7 +22,7 @@ kotest = "6.1.11"
 
 kotlin = "2.3.21"
 
-kotlinx-coroutines = "1.10.2"
+kotlinx-coroutines = "1.11.0"
 
 libwebrtc-ktx = "1.12.0"
 
