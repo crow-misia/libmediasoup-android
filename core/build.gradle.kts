@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.dokka)
     alias(libs.plugins.dokka.javadoc)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.maven.publish)
     id("signing")
 }
@@ -120,9 +119,7 @@ kotlin {
 dependencies {
     implementation(fileTree(mapOf("dir" to projectDir.resolve("deps/webrtc/lib"), "include" to arrayOf("*.jar"))))
 
-    implementation(platform(libs.kotlin.bom))
     implementation(libs.kotlin.stdlib)
-    implementation(platform(libs.kotlinx.coroutines.bom))
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.libwebrtc.ktx)

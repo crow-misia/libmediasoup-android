@@ -1,5 +1,9 @@
 [tools]
+gitleaks = "latest"
 lefthook = "latest"
-node = "24"
+node = "26"
 "npm:@commitlint/cli" = "latest"
 "npm:@commitlint/config-conventional" = "latest"
+"pipx:bumpver" = "latest"
+python = "latest"
+uv = "latest"
