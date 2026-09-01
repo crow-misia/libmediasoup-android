@@ -2,7 +2,7 @@
 
 [versions]
 
-android-gradle-plugin = "9.3.1"
+android-gradle-plugin = "9.3.2"
 
 androidx-test-espresso = "3.7.0"
 
@@ -18,7 +18,7 @@ detekt = "1.23.8"
 
 dokka = "2.2.0"
 
-kotest = "6.2.3"
+kotest = "6.2.4"
 
 kotlin = "2.4.10"
 
