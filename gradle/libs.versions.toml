@@ -20,7 +20,7 @@ dokka = "2.2.0"
 
 kotest = "6.2.4"
 
-kotlin = "2.4.10"
+kotlin = "2.4.20"
 
 kotlinx-coroutines = "1.11.0"
 
